@@ -48,7 +48,7 @@ function isAssetUrl(href) {
 
 // Page se clean text extract 
 function extractText($page) {
-  // Sab unnecessary elements remove karo
+  // remove 
   $page([
     'nav', 'footer', 'header', 'script', 'style', 'noscript',
     'img', 'video', 'audio', 'figure', 'picture', 'svg',
@@ -59,44 +59,15 @@ function extractText($page) {
     '.banner', '.advertisement', '.ads', '.social-links',
     '.breadcrumb', '.pagination', '.comments', 'form',
     'button', 'input', 'select', 'textarea', 'iframe',
-    '.widget', '.related-posts', '.tags', '.share-buttons'
+    '.widget', '.related-posts', '.tags', '.share-buttons',
+    'footer.three',
   ].join(', ')).remove();
 
-  // Main content area 
-  const mainSelectors = [
-    'main', 'article', '[role="main"]',
-    '.service-details', '.about-content', '.how-we-work-section',
-    '.main-content', '#main-content',
-    '.page-content', '#page-content',
-    '.post-content', '.entry-content',
-    '#main', '.wrapper'
-  ];
+  //  main content 
+  const text = $page('body').text();
 
-  let text = '';
-
-  for (const selector of mainSelectors) {
-    const el = $page(selector);
-    if (el.length > 0) {
-      const extracted = el.text().trim();
-      if (extracted.length > 100) {
-        text = extracted;
-        break;
-      }
-    }
-  }
-
-  // Agar koi main content nahi mila to body use 
-  if (!text || text.length < 100) {
-    text = $page('body').text();
-  }
-
-  // Text clean karo
+  // Text clean 
   const cleaned = text
-    .replace(/\t/g, ' ')
-    .replace(/\r/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .replace(/[ ]{2,}/g, ' ')
-    .replace(/\n/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -139,7 +110,7 @@ export async function crawlWebsite(websiteId) {
       if (!href) return;
       try {
         const full = new URL(href, website.url).toString();
-        const cleanUrl = full.split('#')[0].split('?')[0]; // Remove fragments & query strings
+        const cleanUrl = full.split('#')[0].split('?')[0];
         if (
           isSameDomain(cleanUrl, website.url) &&
           !isAssetUrl(cleanUrl) &&
@@ -179,7 +150,7 @@ export async function crawlWebsite(websiteId) {
           continue;
         }
 
-        // Step 7 — Chunks 
+        // Step 7 — Chunks create
         const chunks = splitIntoChunks(cleaned);
 
         if (chunks.length === 0) continue;
@@ -206,10 +177,17 @@ export async function crawlWebsite(websiteId) {
       }
     }
 
-    // Step 9 — Database mein save 
-    for (const chunk of allChunks) {
-      await prisma.content_chunks.create({ data: chunk });
-    }
+    // Step 8.5 — Purane chunks delete  
+    await prisma.content_chunks.deleteMany({
+      where: { websiteId: websiteId }
+    });
+
+    // Step 9 — Database mein saare chunks ek sath save  (Fast Insert)
+    if (allChunks.length > 0) {
+      await prisma.content_chunks.createMany({ 
+        data: allChunks 
+      });
+    }
 
     // Step 10 — Status ready
     await prisma.websites.update({
