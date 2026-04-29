@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  free
+  starter
+  pro
+  agency
+}
+
+enum WebsiteStatus {
+  pending
+  crawling
+  ready
+  failed
+}
+
+enum Tone {
+  professional
+  friendly
+  casual
+}
+
+enum Position {
+  bottom_right
+  bottom_left
+}
+
+enum ConvStatus {
+  open
+  resolved
+  escalated
+}
+
+enum Role {
+  user
+  assistant
+}
+
+model users {
+  id                    Int        @id @default(autoincrement())
+  name                  String
+  email                 String     @unique
+  password              String
+  plan                  Plan       @default(free)
+  stripe_customer_id    String?
+  monthly_conversations Int        @default(0)
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+  websites              websites[]
+}
+
+model websites {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  url            String
+  name           String?
+  status         WebsiteStatus   @default(pending)
+  pages_crawled  Int             @default(0)
+  bot_id         String          @default(uuid())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           users           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bot_config     bot_configs?
+  content_chunks content_chunks[]
+  faqs           faqs[]
+  conversations  conversations[]
+  @@index([userId])
+}
+
+model bot_configs {
+  id            Int      @id @default(autoincrement())
+  websiteId     Int      @unique
+  bot_name      String   @default("AI Assistant")
+  greeting      String
+  tone          Tone     @default(professional)
+  accent_color  String   @default("#0F2A4A")
+  position      Position @default(bottom_right)
+  system_prompt String?
+  website       websites @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+}
+
+model content_chunks {
+  id          Int      @id @default(autoincrement())
+  websiteId   Int
+  source_url  String
+  content     String
+  metadata    Json?
+  chunk_index Int
+  createdAt   DateTime @default(now())
+  website     websites @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  @@index([websiteId])
+}
+
+model faqs {
+  id        Int      @id @default(autoincrement())
+  websiteId Int
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  website   websites @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+}
+
+model conversations {
+  id         String     @id @default(uuid())
+  websiteId  Int
+  visitor_ip String?
+  status     ConvStatus @default(open)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  website    websites   @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  messages   messages[]
+  @@index([websiteId])
+}
+
+model messages {
+  id             Int           @id @default(autoincrement())
+  conversationId String
+  role           Role
+  content        String
+  tokens_used    Int?
+  createdAt      DateTime      @default(now())
+  conversation   conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@index([conversationId])
+}
