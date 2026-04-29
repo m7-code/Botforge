@@ -46,13 +46,15 @@ function isAssetUrl(href) {
   return /\.(pdf|jpg|jpeg|png|gif|css|js|svg|ico|xml|zip|mp4|mp3|avi|mov|webm|woff|woff2|ttf|eot|otf|map)$/i.test(href);
 }
 
-// Page se clean text extract karo
+// Page se clean text extract 
 function extractText($page) {
   // Sab unnecessary elements remove karo
   $page([
     'nav', 'footer', 'header', 'script', 'style', 'noscript',
     'img', 'video', 'audio', 'figure', 'picture', 'svg',
     '.navbar', '.footer', '.header', '.sidebar', '.menu',
+    '.header-sidebar', '.address-card', '.home4-contact-area',
+    '.mobile-menu-form', '.footer-top', '.breadcrumbs',
     '.nav', '.navigation', '.cookie', '.popup', '.modal',
     '.banner', '.advertisement', '.ads', '.social-links',
     '.breadcrumb', '.pagination', '.comments', 'form',
@@ -60,14 +62,14 @@ function extractText($page) {
     '.widget', '.related-posts', '.tags', '.share-buttons'
   ].join(', ')).remove();
 
-  // Main content area dhundo
+  // Main content area 
   const mainSelectors = [
     'main', 'article', '[role="main"]',
+    '.service-details', '.about-content', '.how-we-work-section',
     '.main-content', '#main-content',
-    '.content', '#content',
     '.page-content', '#page-content',
     '.post-content', '.entry-content',
-    '.container', '#main', '.wrapper'
+    '#main', '.wrapper'
   ];
 
   let text = '';
@@ -75,13 +77,16 @@ function extractText($page) {
   for (const selector of mainSelectors) {
     const el = $page(selector);
     if (el.length > 0) {
-      text = el.text();
-      break;
+      const extracted = el.text().trim();
+      if (extracted.length > 100) {
+        text = extracted;
+        break;
+      }
     }
   }
 
-  // Agar koi main content nahi mila to body use karo
-  if (!text || text.trim().length < 100) {
+  // Agar koi main content nahi mila to body use 
+  if (!text || text.length < 100) {
     text = $page('body').text();
   }
 
@@ -108,7 +113,7 @@ export async function crawlWebsite(websiteId) {
     data: { status: 'crawling' },
   });
 
-  console.log(`🕷️ Crawling: ${website.url}`);
+  console.log(` Crawling: ${website.url}`);
 
   try {
     // Step 2 — Homepage fetch
@@ -118,14 +123,14 @@ export async function crawlWebsite(websiteId) {
     });
     const $ = cheerio.load(html);
 
-    // Website name extract karo
+    // Website name extract 
     const websiteName = $('title').text().trim() || website.url;
     await prisma.websites.update({
       where: { id: websiteId },
       data: { name: websiteName }
     });
 
-    // Step 3 — Links extract karo
+    // Step 3 — Links extract 
     const links = new Set();
     links.add(website.url);
 
@@ -154,7 +159,7 @@ export async function crawlWebsite(websiteId) {
     let pagesCrawled = 0;
     const allChunks = [];
 
-    // Step 5 — Har URL crawl karo
+    // Step 5 — Har URL crawl 
     for (const url of urls) {
       try {
         const { data: pageHtml } = await axios.get(url, {
@@ -166,15 +171,15 @@ export async function crawlWebsite(websiteId) {
         // Title
         const title = $page('title').text().trim();
 
-        // Step 5 & 6 — Clean text extract karo
+        // Step 5 and 6 — Clean text extract 
         const cleaned = extractText($page);
 
         if (cleaned.length < 100) {
-          console.log(`⏭️ Skipped (too short): ${url}`);
+          console.log(`Skipped (too short): ${url}`);
           continue;
         }
 
-        // Step 7 — Chunks banao
+        // Step 7 — Chunks 
         const chunks = splitIntoChunks(cleaned);
 
         if (chunks.length === 0) continue;
@@ -194,14 +199,14 @@ export async function crawlWebsite(websiteId) {
         });
 
         pagesCrawled++;
-        console.log(`✅ Crawled: ${url} → ${chunks.length} chunks`);
+        console.log(`Crawled: ${url} → ${chunks.length} chunks`);
 
       } catch (err) {
-        console.log(`⚠️ Failed: ${url} → ${err.message}`);
+        console.log(`Failed: ${url} → ${err.message}`);
       }
     }
 
-    // Step 9 — Database mein save karo
+    // Step 9 — Database mein save 
     for (const chunk of allChunks) {
       await prisma.content_chunks.create({ data: chunk });
     }
@@ -212,7 +217,7 @@ export async function crawlWebsite(websiteId) {
       data: { status: 'ready', pages_crawled: pagesCrawled },
     });
 
-    console.log(`✅ Done! ${pagesCrawled} pages, ${allChunks.length} chunks`);
+    console.log(`Done! ${pagesCrawled} pages, ${allChunks.length} chunks`);
     return { pagesCrawled, chunksCreated: allChunks.length };
 
   } catch (err) {
@@ -220,7 +225,7 @@ export async function crawlWebsite(websiteId) {
       where: { id: websiteId },
       data: { status: 'failed' },
     });
-    console.error(`❌ Crawl failed:`, err.message);
+    console.error(`Crawl failed:`, err.message);
     throw err;
   }
 }
