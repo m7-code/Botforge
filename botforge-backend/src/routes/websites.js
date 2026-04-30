@@ -60,6 +60,33 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/v1/websites/:id/chunks
+router.get('/:id/chunks', authenticateToken, async (req, res) => {
+  try {
+    const website = await prisma.websites.findFirst({
+      where: { id: parseInt(req.params.id), userId: req.user.id },
+    });
+    if (!website) return res.status(404).json({ success: false, message: 'Not found' });
+
+    const chunks = await prisma.content_chunks.findMany({
+      where: { websiteId: website.id },
+      select: {
+        id: true,
+        source_url: true,
+        content: true,
+        chunk_index: true,
+        metadata: true,
+        createdAt: true,
+      },
+      orderBy: [{ source_url: 'asc' }, { chunk_index: 'asc' }],
+    });
+
+    return res.json({ success: true, data: { chunks }, message: 'Chunks fetched' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // GET /api/v1/websites/:id
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
@@ -105,6 +132,8 @@ router.post('/:id/recrawl', authenticateToken, async (req, res) => {
       where: { id: website.id },
       data: { status: 'pending', pages_crawled: 0 },
     });
+
+    
 
     // Crawl shuru 
     const { crawlWebsite } = await import('../jobs/crawlWebsite.js');
