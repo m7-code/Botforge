@@ -39,8 +39,12 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Email</label>
+            {/* 1. htmlFor add kiya */}
+            <label htmlFor="email" className="text-sm text-gray-400 mb-1 block">Email</label>
             <input
+              id="email"          // 2. id add kiya
+              name="email"        // 3. name add kiya
+              autoComplete="email" // 4. autofill ke liye add kiya
               type="email"
               required
               placeholder="john@example.com"
@@ -50,8 +54,12 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Password</label>
+            {/* 1. htmlFor add kiya */}
+            <label htmlFor="password" className="text-sm text-gray-400 mb-1 block">Password</label>
             <input
+              id="password"                 // 2. id add kiya
+              name="password"               // 3. name add kiya
+              autoComplete="current-password" // 4. autofill ke liye add kiya
               type="password"
               required
               placeholder="Your password"

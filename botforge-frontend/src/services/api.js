@@ -19,5 +19,6 @@ export const addWebsite = (data) => API.post('/websites', data);
 export const getWebsite = (id) => API.get(`/websites/${id}`);
 export const deleteWebsite = (id) => API.delete(`/websites/${id}`);
 export const recrawlWebsite = (id) => API.post(`/websites/${id}/recrawl`);
+export const getChunks = (id) => API.get(`/websites/${id}/chunks`);
 
 export default API;

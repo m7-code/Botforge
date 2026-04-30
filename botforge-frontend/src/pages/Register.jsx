@@ -39,8 +39,12 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Full Name</label>
+            {/* Label linked to Name input */}
+            <label htmlFor="name" className="text-sm text-gray-400 mb-1 block">Full Name</label>
             <input
+              id="name"
+              name="name"
+              autoComplete="name"
               type="text"
               required
               placeholder="John Doe"
@@ -50,8 +54,12 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Email</label>
+            {/* Label linked to Email input */}
+            <label htmlFor="email" className="text-sm text-gray-400 mb-1 block">Email</label>
             <input
+              id="email"
+              name="email"
+              autoComplete="email"
               type="email"
               required
               placeholder="john@example.com"
@@ -61,8 +69,12 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="text-sm text-gray-400 mb-1 block">Password</label>
+            {/* Label linked to Password input */}
+            <label htmlFor="password" className="text-sm text-gray-400 mb-1 block">Password</label>
             <input
+              id="password"
+              name="password"
+              autoComplete="new-password"
               type="password"
               required
               placeholder="Min 6 characters"

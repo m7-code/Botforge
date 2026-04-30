@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getWebsites, addWebsite, deleteWebsite, recrawlWebsite, getMe } from '../services/api';
 
 export default function Dashboard() {
@@ -12,9 +12,7 @@ export default function Dashboard() {
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
@@ -44,13 +42,17 @@ export default function Dashboard() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!confirm('Delete this website?')) return;
     await deleteWebsite(id);
     fetchData();
   };
 
-  const handleRecrawl = async (id) => {
+  const handleRecrawl = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     await recrawlWebsite(id);
     fetchData();
   };
@@ -98,8 +100,7 @@ export default function Dashboard() {
               {websites.length} website{websites.length !== 1 ? 's' : ''} added
             </p>
           </div>
-          <button
-            onClick={() => setShowAdd(true)}
+          <button onClick={() => setShowAdd(true)}
             className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition">
             + Add Website
           </button>
@@ -156,10 +157,10 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-4">
             {websites.map((site) => (
-              <div key={site.id}
-                className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex items-center justify-between">
+              <Link to={`/websites/${site.id}`} key={site.id}
+                className="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex items-center justify-between hover:border-gray-600 transition cursor-pointer block">
                 <div className="flex items-center gap-4">
-                  <div className={`w-3 h-3 rounded-full ${statusColor[site.status]}`} />
+                  <div className={`w-3 h-3 rounded-full flex-shrink-0 ${statusColor[site.status]}`} />
                   <div>
                     <h3 className="font-semibold">{site.name || site.url}</h3>
                     <p className="text-gray-400 text-sm">{site.url}</p>
@@ -172,17 +173,17 @@ export default function Dashboard() {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleRecrawl(site.id)}
+                    onClick={(e) => handleRecrawl(e, site.id)}
                     className="px-3 py-1.5 text-sm border border-gray-700 rounded-lg hover:bg-gray-800 transition">
                     🔄 Recrawl
                   </button>
                   <button
-                    onClick={() => handleDelete(site.id)}
+                    onClick={(e) => handleDelete(e, site.id)}
                     className="px-3 py-1.5 text-sm border border-red-800 text-red-400 rounded-lg hover:bg-red-900/30 transition">
                     🗑️ Delete
                   </button>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

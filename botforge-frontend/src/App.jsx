@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
+import WebsiteDetail from './pages/WebsiteDetail';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -15,9 +16,10 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
+          <ProtectedRoute><Dashboard /></ProtectedRoute>
+        } />
+        <Route path="/websites/:id" element={
+          <ProtectedRoute><WebsiteDetail /></ProtectedRoute>
         } />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
