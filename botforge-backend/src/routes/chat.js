@@ -76,7 +76,7 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
     });
     if (!conversation) return res.status(404).json({ success: false, error: 'Conversation not found' });
 
-    // Simple search — message words se chunks dhundo
+    // Keywords se chunks dhundo
     const keywords = message.toLowerCase().split(' ')
       .filter(w => w.length > 3)
       .slice(0, 5);
@@ -95,7 +95,6 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
       });
     }
 
-    // Agar koi chunks nahi mile to random lo
     if (chunks.length === 0) {
       chunks = await prisma.content_chunks.findMany({
         where: { websiteId: website.id },
@@ -107,8 +106,9 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
     const botName = website.bot_config?.bot_name || 'AI Assistant';
     const tone = website.bot_config?.tone || 'professional';
 
-    // OpenAI call
-    const OPENAI_KEY = process.env.OPENAI_API_KEY;
+    const AI_KEY = process.env.AI_API_KEY;
+    const AI_BASE_URL = process.env.AI_BASE_URL;
+    const AI_MODEL = process.env.AI_MODEL || 'gemini-2.5-flash';
 
     // SSE headers
     res.setHeader('Content-Type', 'text/event-stream');
@@ -116,43 +116,45 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
-    if (!OPENAI_KEY || OPENAI_KEY === 'sk-your-key-here') {
-      // Demo mode — OpenAI key nahi hai
+    // Agar key nahi hai — Demo mode
+    if (!AI_KEY || AI_KEY === 'your-key-here') {
       const demoResponse = chunks.length > 0
-        ? `Based on our website content: ${chunks[0].content.slice(0, 200)}...`
-        : `I'm ${botName}. I can help you with questions about ${website.name}. Please ask me anything!`;
+        ? `Based on our website: ${chunks[0].content.slice(0, 200)}...`
+        : `I'm ${botName}. How can I help you with ${website.name}?`;
 
-      const words = demoResponse.split(' ');
-      for (const word of words) {
+      for (const word of demoResponse.split(' ')) {
         res.write(`data: ${JSON.stringify({ token: word + ' ' })}\n\n`);
-        await new Promise(r => setTimeout(r, 50));
+        await new Promise(r => setTimeout(r, 40));
       }
-
       res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
       res.end();
 
-      // Save messages
       await prisma.messages.create({ data: { conversationId: conversation_id, role: 'user', content: message } });
       await prisma.messages.create({ data: { conversationId: conversation_id, role: 'assistant', content: demoResponse } });
       return;
     }
 
-    // Real OpenAI streaming
-    const systemPrompt = `You are ${botName}, an AI assistant for ${website.name}. 
-Tone: ${tone}. 
-Answer ONLY from the context below. If the answer is not in the context, say you are not sure and suggest contacting support.
+    // Real AI Streaming
+    
+    const systemPrompt = `You are ${botName}, a helpful AI assistant for ${website.name}.
+Tone: ${tone}.
+
+INSTRUCTIONS:
+1. If the user is just greeting you (e.g., 'hi', 'hello', 'hey', 'salam'), respond politely and ask how you can help them with ${website.name}.
+2. For any specific questions, answer ONLY using the information provided in the CONTEXT below.
+3. If the user's question cannot be answered using the CONTEXT, do not guess. Simply say you are not sure and suggest contacting support.
 
 CONTEXT:
 ${context}`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch(`${AI_BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_KEY}`
+        'Authorization': `Bearer ${AI_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: AI_MODEL,
         stream: true,
         messages: [
           { role: 'system', content: systemPrompt },
@@ -160,6 +162,14 @@ ${context}`;
         ]
       })
     });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('AI API Error:', errText);
+      res.write(`data: ${JSON.stringify({ error: 'AI service error' })}\n\n`);
+      res.end();
+      return;
+    }
 
     let fullResponse = '';
     const reader = response.body.getReader();
@@ -189,11 +199,11 @@ ${context}`;
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
 
-    // Save messages
     await prisma.messages.create({ data: { conversationId: conversation_id, role: 'user', content: message } });
     await prisma.messages.create({ data: { conversationId: conversation_id, role: 'assistant', content: fullResponse } });
 
   } catch (err) {
+    console.error('Chat error:', err);
     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
     res.end();
   }
