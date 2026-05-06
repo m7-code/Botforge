@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Stage, PresentationControls } from '@react-three/drei';
 
 function Model(props) {
-  // Yahan apne model ka path dein jo public folder mein hai
+  // model ka path
   const { scene } = useGLTF('/robot.glb'); 
   return <primitive object={scene} scale={0.01} {...props} />;
 }

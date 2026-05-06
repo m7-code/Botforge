@@ -114,14 +114,23 @@ export default function WebsiteDetail() {
         </div>
 
         {/* Bot ID Card */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
-          <h3 className="font-semibold mb-3 text-gray-300">📋 Embed Widget</h3>
-          <div className="bg-gray-950 rounded-lg p-4 font-mono text-sm text-blue-300">
-            {`<script src="https://botforge.com/widget.js" data-bot-id="${website.bot_id}"></script>`}
-          </div>
-          <p className="text-gray-500 text-xs mt-2">Add this to your website's HTML to embed the chatbot</p>
-        </div>
-
+<div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-8">
+  <h3 className="font-semibold mb-3 text-gray-300">📋 Embed Widget</h3>
+  <div className="bg-gray-950 rounded-lg p-4 font-mono text-sm text-blue-300 break-all">
+    {`<script src="http://localhost:5173/widget.js" data-bot-id="${website.bot_id}"></script>`}
+  </div>
+  <button
+    onClick={() => {
+      navigator.clipboard.writeText(
+        `<script src="http://localhost:5173/widget.js" data-bot-id="${website.bot_id}"></script>`
+      );
+      alert('Copied!');
+    }}
+    className="mt-3 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded-lg transition">
+    📋 Copy Code
+  </button>
+  <p className="text-gray-500 text-xs mt-2">Add this to your website's HTML to embed the chatbot</p>
+</div>
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-gray-800">
           {['overview', 'chunks'].map(tab => (
