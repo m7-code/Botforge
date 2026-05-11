@@ -5,7 +5,7 @@ import { login } from '../services/api';
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
 const BotIcon = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9">
+  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
     <rect x="8" y="14" width="32" height="26" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="2"/>
     <circle cx="18" cy="26" r="4" fill="#3B82F6"/>
     <circle cx="30" cy="26" r="4" fill="#3B82F6"/>
@@ -87,39 +87,39 @@ export default function Login() {
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 relative overflow-hidden">
 
       {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-blue-600/6 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-blue-600/8 blur-[100px] rounded-full pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-sm relative z-10">
 
-        {/* Card */}
-        <div className="bg-gray-900/80 backdrop-blur-sm rounded-3xl p-8 border border-gray-800 shadow-2xl">
+        {/* Card - Compact */}
+        <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-800 shadow-2xl">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center justify-center gap-2.5 mb-8 group">
+          <Link to="/" className="flex items-center justify-center gap-2 mb-6 group">
             <BotIcon />
-            <span className="text-xl font-bold text-white group-hover:text-blue-400 transition">BotForge</span>
+            <span className="text-lg font-bold text-white group-hover:text-blue-400 transition">BotForge</span>
           </Link>
 
-          <h2 className="text-2xl font-bold text-white text-center mb-1">Welcome back</h2>
-          <p className="text-gray-400 text-sm text-center mb-8">Sign in to your account</p>
+          <h2 className="text-xl font-bold text-white text-center mb-1">Welcome back</h2>
+          <p className="text-gray-500 text-xs text-center mb-6">Sign in to your account</p>
 
           {/* Error */}
           {error && (
-            <div className="flex items-center gap-2.5 bg-red-950/50 border border-red-800/60 text-red-300 px-4 py-3 rounded-xl mb-6 text-sm">
+            <div className="flex items-center gap-2 bg-red-950/50 border border-red-800/60 text-red-300 px-3 py-2.5 rounded-xl mb-4 text-xs">
               <AlertIcon />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="text-sm text-gray-400 mb-1.5 block font-medium">
-                Email address
+              <label htmlFor="email" className="text-xs text-gray-400 mb-1 block font-medium">
+                Email
               </label>
               <div className="relative">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <EmailIcon />
                 </div>
                 <input
@@ -131,23 +131,23 @@ export default function Login() {
                   placeholder="john@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-gray-800/80 border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
+                  className="w-full bg-gray-800/80 border border-gray-700 rounded-lg pl-9 pr-3 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="password" className="text-sm text-gray-400 font-medium">
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="password" className="text-xs text-gray-400 font-medium">
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-xs text-blue-400 hover:text-blue-300 transition">
-                  Forgot password?
+                <Link to="/forgot-password" className="text-[11px] text-blue-400 hover:text-blue-300 transition">
+                  Forgot?
                 </Link>
               </div>
               <div className="relative">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <LockIcon />
                 </div>
                 <input
@@ -159,12 +159,12 @@ export default function Login() {
                   placeholder="••••••••"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full bg-gray-800/80 border border-gray-700 rounded-xl pl-10 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
+                  className="w-full bg-gray-800/80 border border-gray-700 rounded-lg pl-9 pr-12 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition text-xs px-1">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition text-[11px]">
                   {showPass ? 'Hide' : 'Show'}
                 </button>
               </div>
@@ -174,7 +174,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2 text-sm hover:shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm hover:shadow-[0_0_16px_rgba(37,99,235,0.3)]">
               {loading ? (
                 <>
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -189,21 +189,21 @@ export default function Login() {
           </form>
 
           {/* Divider */}
-          <div className="my-6 flex items-center gap-3">
+          <div className="my-5 flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-800" />
-            <span className="text-gray-600 text-xs uppercase tracking-wider">or continue with</span>
+            <span className="text-gray-600 text-[10px] uppercase tracking-wider">or</span>
             <div className="flex-1 h-px bg-gray-800" />
           </div>
 
           {/* Google */}
-          <button className="w-full py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-semibold flex items-center justify-center gap-3 transition text-sm border border-gray-200 hover:shadow-md">
+          <button className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-900 rounded-lg font-semibold flex items-center justify-center gap-2 transition text-sm border border-gray-200">
             <GoogleIcon />
-            Continue with Google
+            Google
           </button>
 
           {/* Footer */}
-          <p className="text-center text-gray-500 text-sm mt-6">
-            Don't have an account?{' '}
+          <p className="text-center text-gray-500 text-xs mt-5">
+            No account?{' '}
             <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition">
               Sign up free
             </Link>
@@ -211,7 +211,7 @@ export default function Login() {
         </div>
 
         {/* Bottom text */}
-        <p className="text-center text-gray-600 text-xs mt-6">
+        <p className="text-center text-gray-600 text-[10px] mt-4">
           By signing in, you agree to our Terms & Privacy Policy
         </p>
       </div>
