@@ -11,6 +11,12 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+export const getAdminUsers  = () => API.get('/admin/users');
+export const getAdminStats  = () => API.get('/admin/stats');
+export const updateUserPlan = (id, plan) => API.patch(`/admin/users/${id}/plan`, { plan });
+export const toggleAdmin    = (id, is_admin) => API.patch(`/admin/users/${id}/admin`, { is_admin });
+export const deleteUser     = (id) => API.delete(`/admin/users/${id}`);
+
 export const register = (data) => API.post('/auth/register', data);
 export const login = (data) => API.post('/auth/login', data);
 export const getMe = () => API.get('/auth/me');

@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import WebsiteDetail from './pages/WebsiteDetail';
+import AdminPanel from './pages/AdminPanel';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -21,6 +22,11 @@ export default function App() {
         <Route path="/websites/:id" element={
           <ProtectedRoute><WebsiteDetail /></ProtectedRoute>
         } />
+        <Route path="/admin" element={
+  <ProtectedRoute adminOnly={true}>
+    <AdminPanel />
+  </ProtectedRoute>
+} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

@@ -75,6 +75,7 @@ export default function Login() {
     try {
       const res = await login(form);
       localStorage.setItem('token', res.data.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.data.user));
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');

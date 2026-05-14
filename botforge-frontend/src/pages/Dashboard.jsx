@@ -129,17 +129,18 @@ export default function Dashboard() {
   useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
-    try {
-      const [webRes, userRes] = await Promise.all([getWebsites(), getMe()]);
-      setWebsites(webRes.data.data.websites);
-      setUser(userRes.data.data.user);
-    } catch {
-      navigate('/login');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  try {
+    const [webRes, userRes] = await Promise.all([getWebsites(), getMe()]);
+    setWebsites(webRes.data.data.websites);
+    setUser(userRes.data.data.user);
+    // ← Yeh add karo
+    localStorage.setItem('user', JSON.stringify(userRes.data.data.user));
+  } catch {
+    navigate('/login');
+  } finally {
+    setLoading(false);
+  }
+};
   const handleAdd = async (e) => {
     e.preventDefault();
     setAdding(true);
@@ -173,6 +174,7 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
@@ -197,25 +199,34 @@ export default function Dashboard() {
 
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/60 sticky top-0 bg-gray-950/80 backdrop-blur-md z-50">
-        <div className="flex items-center gap-2.5">
-          <BotIcon />
-          <span className="text-xl font-bold text-white">BotForge</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm hidden sm:flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500"/>
-            {user?.name}
-            <span className="px-2 py-0.5 bg-blue-950/60 border border-blue-800/40 rounded-full text-blue-400 text-xs capitalize">
-              {user?.plan}
-            </span>
-          </span>
-          <button onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition">
-            <LogoutIcon />
-            <span className="hidden sm:inline">Logout</span>
-          </button>
-        </div>
-      </nav>
+  <div className="flex items-center gap-2.5">
+    <BotIcon />
+    <span className="text-xl font-bold text-white">BotForge</span>
+  </div>
+  <div className="flex items-center gap-4">
+
+    {/* Admin button */}
+    {user?.is_admin && (
+      <Link to="/admin"
+        className="px-4 py-2 text-sm text-red-400 border border-red-800 rounded-lg hover:bg-red-900/30 transition flex items-center gap-2">
+        🔧 Admin
+      </Link>
+    )}
+
+    <span className="text-gray-400 text-sm hidden sm:flex items-center gap-2">
+      <span className="w-2 h-2 rounded-full bg-green-500"/>
+      {user?.name}
+      <span className="px-2 py-0.5 bg-blue-950/60 border border-blue-800/40 rounded-full text-blue-400 text-xs capitalize">
+        {user?.plan}
+      </span>
+    </span>
+    <button onClick={handleLogout}
+      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition">
+      <LogoutIcon />
+      <span className="hidden sm:inline">Logout</span>
+    </button>
+  </div>
+</nav>
 
       <div className="max-w-5xl mx-auto px-8 py-10">
         {/* Header */}

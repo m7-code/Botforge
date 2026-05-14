@@ -89,6 +89,7 @@ export default function Register() {
     try {
       const res = await register(form);
       localStorage.setItem('token', res.data.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.data.user));
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
