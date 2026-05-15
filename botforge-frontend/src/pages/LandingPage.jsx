@@ -1,280 +1,382 @@
 import { Link } from 'react-router-dom';
-import HeroModel from '../components/HeroModel';
 
-// ─── Custom SVG Icons ─────────────────────────────────────────────────────────
-
-const CrawlerIcon = () => (
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-    <circle cx="32" cy="32" r="30" stroke="#3B82F6" strokeWidth="2" strokeDasharray="6 3" opacity="0.4"/>
-    <circle cx="32" cy="32" r="20" stroke="#3B82F6" strokeWidth="2" strokeDasharray="4 2" opacity="0.6"/>
-    <circle cx="32" cy="32" r="6" fill="#3B82F6"/>
-    <line x1="32" y1="2" x2="32" y2="12" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round"/>
-    <line x1="32" y1="52" x2="32" y2="62" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round"/>
-    <line x1="2" y1="32" x2="12" y2="32" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round"/>
-    <line x1="52" y1="32" x2="62" y2="32" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round"/>
-    <circle cx="32" cy="8" r="3" fill="#60A5FA"/>
-    <circle cx="32" cy="56" r="3" fill="#60A5FA"/>
-    <circle cx="8" cy="32" r="3" fill="#60A5FA"/>
-    <circle cx="56" cy="32" r="3" fill="#60A5FA"/>
-  </svg>
-);
-
-const BrainIcon = () => (
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-    <path d="M32 8C24 8 18 13 18 20C18 24 20 27.5 23 29.5C20 30.5 16 34 16 40C16 47 22 54 32 54C42 54 48 47 48 40C48 34 44 30.5 41 29.5C44 27.5 46 24 46 20C46 13 40 8 32 8Z" stroke="#3B82F6" strokeWidth="2" fill="rgba(59,130,246,0.08)"/>
-    <path d="M32 8V54" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.5"/>
-    <path d="M23 29.5C26 28 30 27 32 27C34 27 38 28 41 29.5" stroke="#3B82F6" strokeWidth="1.5"/>
-    <circle cx="26" cy="20" r="2.5" fill="#60A5FA"/>
-    <circle cx="38" cy="20" r="2.5" fill="#60A5FA"/>
-    <circle cx="24" cy="40" r="2" fill="#93C5FD"/>
-    <circle cx="32" cy="44" r="2" fill="#93C5FD"/>
-    <circle cx="40" cy="40" r="2" fill="#93C5FD"/>
-    <path d="M26 20 Q29 24 32 27" stroke="#60A5FA" strokeWidth="1" opacity="0.6"/>
-    <path d="M38 20 Q35 24 32 27" stroke="#60A5FA" strokeWidth="1" opacity="0.6"/>
-    <path d="M24 40 Q28 43 32 44" stroke="#93C5FD" strokeWidth="1" opacity="0.6"/>
-    <path d="M40 40 Q36 43 32 44" stroke="#93C5FD" strokeWidth="1" opacity="0.6"/>
-  </svg>
-);
-
-const EmbedIcon = () => (
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-    <rect x="4" y="10" width="56" height="44" rx="6" stroke="#3B82F6" strokeWidth="2" fill="rgba(59,130,246,0.06)"/>
-    <rect x="4" y="10" width="56" height="12" rx="6" fill="rgba(59,130,246,0.15)" stroke="none"/>
-    <circle cx="14" cy="16" r="3" fill="#EF4444"/>
-    <circle cx="24" cy="16" r="3" fill="#F59E0B"/>
-    <circle cx="34" cy="16" r="3" fill="#10B981"/>
-    <path d="M20 35L14 41L20 47" stroke="#60A5FA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M44 35L50 41L44 47" stroke="#60A5FA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M36 30L28 52" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" opacity="0.7"/>
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0">
-    <circle cx="10" cy="10" r="9" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="1.5"/>
-    <path d="M6 10L9 13L14 7" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 const BotIcon = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-    <rect x="8" y="14" width="32" height="26" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="2"/>
-    <circle cx="18" cy="26" r="4" fill="#3B82F6"/>
-    <circle cx="30" cy="26" r="4" fill="#3B82F6"/>
-    <circle cx="18" cy="26" r="2" fill="#93C5FD"/>
-    <circle cx="30" cy="26" r="2" fill="#93C5FD"/>
-    <path d="M19 34 Q24 38 29 34" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M24 14 L24 8" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="24" cy="6" r="2.5" fill="#60A5FA"/>
-    <path d="M10 28 L4 28" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M44 28 L38 28" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="3" cy="28" r="2" fill="#60A5FA"/>
-    <circle cx="45" cy="28" r="2" fill="#60A5FA"/>
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
+    <rect x="5" y="9" width="22" height="18" rx="6" fill="rgba(0,80,204,0.12)" stroke="#0050cc" strokeWidth="1.5"/>
+    <circle cx="12" cy="17" r="2.5" fill="#0050cc"/>
+    <circle cx="20" cy="17" r="2.5" fill="#0050cc"/>
+    <circle cx="12" cy="17" r="1" fill="#dae1ff"/>
+    <circle cx="20" cy="17" r="1" fill="#dae1ff"/>
+    <path d="M13 22 Q16 24.5 19 22" stroke="#0050cc" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M16 9V5" stroke="#0050cc" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="16" cy="4" r="1.5" fill="#0050cc"/>
   </svg>
 );
 
-const StarIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
-    <path d="M10 2L12.4 7.5H18L13.5 11.3L15.5 17L10 13.5L4.5 17L6.5 11.3L2 7.5H7.6L10 2Z" fill="#F59E0B" stroke="#F59E0B" strokeWidth="1" strokeLinejoin="round"/>
+const DatabaseIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600">
+    <ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M3 5V12C3 13.657 7.029 15 12 15C16.971 15 21 13.657 21 12V5" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M3 12V19C3 20.657 7.029 22 12 22C16.971 22 21 20.657 21 19V12" stroke="currentColor" strokeWidth="1.5"/>
   </svg>
 );
 
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-    <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+const PaletteIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+    <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
+    <circle cx="12" cy="15" r="1.5" fill="currentColor"/>
+    <path d="M12 21C12 21 16 18 16 14H8C8 18 12 21 12 21Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+  </svg>
+);
+
+const CodeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-blue-600">
+    <path d="M8 6L2 12L8 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 6L22 12L16 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14 4L10 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
 const ShieldIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-400">
-    <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)" strokeLinejoin="round"/>
-    <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-600">
+    <path d="M10 2L3 5.5V10C3 13.5 6 16.5 10 18C14 16.5 17 13.5 17 10V5.5L10 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M7 10L9 12L13 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const ZapIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-400">
-    <path d="M13 2L4 14H12L11 22L20 10H12L13 2Z" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)" strokeLinejoin="round"/>
+const SpeedIcon = () => (
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-600">
+    <path d="M10 3C6.13 3 3 6.13 3 10H17C17 6.13 13.87 3 10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M10 10L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
   </svg>
 );
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+const StarIcon = () => (
+  <svg viewBox="0 0 20 20" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <path d="M10 2L12.4 7.5H18L13.5 11.3L15.5 17L10 13.5L4.5 17L6.5 11.3L2 7.5H7.6L10 2Z"/>
+  </svg>
+);
 
-const features = [
-  { Icon: CrawlerIcon, title: 'Smart Web Crawler',   desc: 'Automatically discovers and indexes every page of your website — up to 100 pages per crawl.' },
-  { Icon: BrainIcon,   title: 'AI Knowledge Base',   desc: 'Converts your content into intelligent embeddings so the chatbot answers with precision.' },
-  { Icon: EmbedIcon,   title: 'One-Line Embed',      desc: 'Copy a single script tag and drop it into any HTML page. Your bot is live in seconds.' },
-];
+const NotifIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
 
-const plans = [
-  { plan: 'Free',    price: '$0',   convos: '500',       bots: '1',  popular: false },
-  { plan: 'Starter', price: '$29',  convos: '5,000',     bots: '3',  popular: false },
-  { plan: 'Pro',     price: '$79',  convos: '25,000',    bots: '10', popular: true  },
-  { plan: 'Agency',  price: '$199', convos: 'Unlimited', bots: '∞',  popular: false },
-];
+const SettingsIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const LangIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 3C12 3 9 7 9 12C9 17 12 21 12 21M12 3C12 3 15 7 15 12C15 17 12 21 12 21M3 12H21" stroke="currentColor" strokeWidth="1.5"/>
+  </svg>
+);
+
+const HubIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="4" cy="6" r="2" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="20" cy="6" r="2" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="4" cy="18" r="2" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="20" cy="18" r="2" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M6 7L10 10M14 10L18 7M6 17L10 14M14 14L18 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const LinkIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gray-950 text-white selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#f8f9ff] text-gray-900 overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-5 border-b border-gray-800/60 sticky top-0 bg-gray-950/80 backdrop-blur-md z-50">
-        <div className="flex items-center gap-2.5">
-          <BotIcon />
-          <span className="text-xl font-bold text-white">BotForge</span>
-        </div>
-        <div className="flex gap-3">
-          <Link to="/login" className="px-4 py-2 text-gray-400 hover:text-white transition text-sm">
-            Login
-          </Link>
-          <Link to="/register" className="px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-medium text-sm flex items-center gap-2">
-            Get Started <ArrowIcon />
-          </Link>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative pt-10 pb-24 px-4 overflow-hidden">
-
-        {/* Background Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/8 blur-[120px] rounded-full pointer-events-none -z-10" />
-        <div className="absolute top-20 left-1/4 w-[300px] h-[300px] bg-blue-800/6 blur-[80px] rounded-full pointer-events-none -z-10" />
-
-        <div className="max-w-6xl mx-auto text-center">
-
-          {/* AI Badge */}
-          <div className="inline-flex items-center gap-2 bg-blue-950/60 border border-blue-800/50 rounded-full px-4 py-1.5 text-sm text-blue-300 mb-6">
-            <svg viewBox="0 0 12 12" className="w-2 h-2"><circle cx="6" cy="6" r="6" fill="#3B82F6"/></svg>
-            AI-powered chatbot for any website
+      {/* ── Navbar ── */}
+      <header className="bg-white w-full top-0 sticky z-50 border-b border-gray-200">
+        <nav className="flex justify-between items-center px-8 py-4 max-w-full mx-auto">
+          <div className="flex items-center gap-2">
+            <BotIcon />
+            <span className="font-bold text-xl text-gray-900 tracking-tight">BotForge</span>
           </div>
-
-          {/* 3D Model */}
-          <div className="w-full h-[350px] md:h-[450px] mb-4">
-            <HeroModel />
+          <div className="hidden md:flex items-center gap-10 text-sm text-gray-500">
+            <Link to="/dashboard" className="hover:text-blue-600 transition">Dashboard</Link>
+            <a href="#features" className="hover:text-blue-600 transition">Features</a>
+            <a href="#pricing" className="hover:text-blue-600 transition">Pricing</a>
+            <a href="#" className="hover:text-blue-600 transition">Documentation</a>
           </div>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2">
+              <button className="text-gray-500 hover:bg-gray-100 transition p-2 rounded-full"><NotifIcon /></button>
+              <button className="text-gray-500 hover:bg-gray-100 transition p-2 rounded-full"><SettingsIcon /></button>
+            </div>
+            <Link to="/register"
+              className="bg-blue-600 text-white px-5 py-2 text-xs font-bold rounded-lg hover:bg-blue-700 active:scale-95 transition tracking-wide uppercase">
+              Get Started
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-          {/* Heading */}
-          <div className="relative z-10">
-            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
-              Add AI Chatbot to <br />
-              <span className="text-blue-500">Any Website</span> in Minutes
+      <main>
+
+        {/* ── Hero ── */}
+        <section className="relative pt-16 pb-24 px-8 overflow-hidden">
+          <div className="max-w-4xl mx-auto text-center relative z-10">
+
+            <h1 className="text-4xl md:text-[56px] md:leading-[1.1] font-bold mb-6 text-gray-900 tracking-tight">
+              AI Chatbot Infrastructure<br />for Any Website
             </h1>
-
-            <p className="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-              BotForge crawls your website, builds an AI knowledge base, and gives you
-              a chatbot widget to embed anywhere. No coding required.
+            <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+              Transform any website URL into a smart AI chatbot. BotForge crawls your content,
+              builds a knowledge base, and embeds anywhere in seconds.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* URL Input */}
+            <div className="bg-white border border-gray-200 p-2 rounded-xl flex flex-col md:flex-row gap-2 max-w-2xl mx-auto shadow-sm">
+              <div className="flex-grow flex items-center px-4 bg-gray-50 rounded-lg border border-transparent focus-within:border-blue-500 transition">
+                <LinkIcon />
+                <input
+                  className="w-full py-3 bg-transparent border-none focus:outline-none focus:ring-0 text-sm text-gray-800 placeholder-gray-400 ml-2"
+                  placeholder="https://your-website.com"
+                  type="text"
+                  readOnly
+                  onClick={() => window.location.href='/register'}
+                />
+              </div>
               <Link to="/register"
-                className="px-10 py-4 bg-blue-600 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-all flex items-center gap-2 hover:shadow-[0_0_24px_rgba(37,99,235,0.4)]">
-                Start Free <ArrowIcon />
+                className="bg-blue-600 text-white px-10 py-3 rounded-lg text-xs font-bold hover:bg-blue-700 transition active:scale-95 whitespace-nowrap uppercase tracking-wide">
+                Generate Bot
               </Link>
-              <a href="#features" className="text-gray-400 hover:text-white transition text-sm">
-                See how it works ↓
-              </a>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex items-center justify-center gap-6 mt-10 text-sm text-gray-500 flex-wrap">
-              <span className="flex items-center gap-1.5"><ShieldIcon /> No credit card</span>
-              <span className="flex items-center gap-1.5"><ZapIcon /> Setup in 2 min</span>
-              <span className="flex items-center gap-1.5">
-                {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
-                <span className="ml-1">4.9/5</span>
-              </span>
+            {/* Trust */}
+            <div className="mt-6 flex justify-center items-center gap-10 flex-wrap">
+              <div className="flex items-center gap-2">
+                <ShieldIcon />
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">SOC2 Compliant</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <SpeedIcon />
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">99.9% Uptime</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section id="features" className="py-24 px-8 max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-          <p className="text-gray-400 max-w-xl mx-auto">Three simple steps to deploy your AI chatbot</p>
-        </div>
+          {/* Bento Preview */}
+          <div className="mt-16 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[400px]">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map(({ Icon, title, desc }, i) => (
-            <div key={title}
-              className="group bg-gray-900/40 hover:bg-gray-900/80 rounded-3xl p-8 border border-gray-800 hover:border-blue-800/60 text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.07)]">
-              <div className="text-xs font-bold text-blue-500/60 tracking-widest mb-4 uppercase">Step {i + 1}</div>
-              <div className="flex justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Icon />
-              </div>
-              <h3 className="text-xl font-bold mb-3">{title}</h3>
-              <p className="text-gray-400 leading-relaxed text-sm">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-24 px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Pricing</h2>
-          <p className="text-gray-400">Start free, scale when you need to</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {plans.map(({ plan, price, convos, bots, popular }) => (
-            <div key={plan}
-              className={`relative rounded-3xl p-8 border transition-all hover:-translate-y-1 duration-300 ${
-                popular
-                  ? 'border-blue-500 bg-blue-950/20 shadow-[0_0_40px_rgba(59,130,246,0.1)]'
-                  : 'border-gray-800 bg-gray-900/40'
-              }`}>
-              {popular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-4 py-1 rounded-full tracking-wide">
-                  MOST POPULAR
+            {/* Browser Mockup */}
+            <div className="md:col-span-8 bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col shadow-sm">
+              <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 flex justify-between items-center">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-400"/>
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"/>
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-400"/>
                 </div>
-              )}
-              <h3 className="text-base font-bold mb-1 text-gray-300">{plan}</h3>
-              <div className="text-4xl font-extrabold text-white mb-1">
-                {price}<span className="text-sm text-gray-500 font-normal">/mo</span>
+                <span className="text-xs text-gray-400 font-mono">botforge.app/dashboard</span>
               </div>
-              <div className="h-px bg-gray-800 my-5" />
-              <ul className="text-gray-400 text-sm space-y-3 mb-8">
-                <li className="flex items-center gap-2.5"><CheckIcon /><span>{convos} conversations</span></li>
-                <li className="flex items-center gap-2.5"><CheckIcon /><span>{bots} chatbot{bots !== '1' ? 's' : ''}</span></li>
-                <li className="flex items-center gap-2.5"><CheckIcon /><span>Knowledge base</span></li>
-                <li className="flex items-center gap-2.5"><CheckIcon /><span>Embed widget</span></li>
-              </ul>
+              <div className="flex-grow bg-gray-50 relative overflow-hidden">
+                <img
+                  alt="BotForge Dashboard Preview"
+                  className="w-full h-full object-cover opacity-90"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbFRqHdLaDqpnKHGTQPidHTSN-ODQkGPk2ZlzikKM3Vp2l0-YKPnphOJSjUQP_ffDwSsD7bnWDoixkJcI4u_SybswXkq9DYTVlIufETeg4A2WbLotPiy_FYZvCb-yDfrHUTDWHGCE3zHnEGfZD5yqTMVS-8ST-5U5JnCR96a_1HxsAU5Pf_MR_moeXAIJf1UoPb2t6omA-26Y0BfbF89cV1nzrofDFxqZGcqVU5p5hqnxRv8Coor25_N0njezEv6byl62kSR1sIoM"
+                />
+              </div>
+            </div>
+
+            {/* Terminal Card */}
+            <div className="md:col-span-4 bg-gray-900 text-white p-6 rounded-xl flex flex-col justify-between shadow-sm">
+              <div>
+                <h3 className="font-semibold text-lg mb-3">Real-time Crawler</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Watch your website data stream in live with our intelligent crawling engine.</p>
+              </div>
+              <div className="bg-[#0f1923] p-4 rounded-lg font-mono text-xs text-teal-400 mt-4 overflow-hidden">
+                <code>
+                  $ botforge crawl --url<br/>
+                  &gt; scanning pages...<br/>
+                  &gt; found 42 pages<br/>
+                  &gt; building knowledge base...
+                </code>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Features ── */}
+        <section id="features" className="py-16 px-8 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-12">
+              <span className="text-blue-600 text-xs font-bold tracking-widest uppercase">Precision Features</span>
+              <h2 className="text-3xl font-bold text-gray-900 mt-2 tracking-tight">Engineered for Technical Control</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  Icon: DatabaseIcon,
+                  title: 'Surgical Scraping',
+                  desc: 'Our engine crawls up to 100 pages and extracts exactly the content needed to power your chatbot using intelligent text extraction.'
+                },
+                {
+                  Icon: PaletteIcon,
+                  title: 'Custom Bot Styling',
+                  desc: 'Customize every aspect of your chatbot widget to match your brand — colors, greetings, tone, and position.'
+                },
+                {
+                  Icon: CodeIcon,
+                  title: 'Zero-Latency Embeds',
+                  desc: 'A lightweight script tag is all you need. Copy, paste, and your AI chatbot is live on any website instantly.'
+                },
+              ].map(({ Icon, title, desc }) => (
+                <div key={title}
+                  className="bg-[#f8f9ff] border border-gray-200 p-10 rounded-xl flex flex-col items-start hover:border-blue-400 transition group">
+                  <div className="w-12 h-12 rounded-lg bg-[#dce9ff] flex items-center justify-center mb-6 group-hover:bg-blue-100 transition">
+                    <Icon />
+                  </div>
+                  <h3 className="font-semibold text-xl mb-3 text-gray-900">{title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── How It Works ── */}
+        <section className="py-16 px-8 bg-[#f8f9ff]">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-16 items-center">
+              <div className="md:w-1/2">
+                <h2 className="text-3xl font-bold text-gray-900 mb-10 tracking-tight">
+                  From URL to Chatbot<br />in Three Steps
+                </h2>
+                <div className="space-y-10">
+                  {[
+                    { n: '1', title: 'Add Your Website', desc: 'Input any public URL. Our system crawls and indexes all pages, building a comprehensive knowledge base automatically.' },
+                    { n: '2', title: 'Configure Your Bot', desc: 'Set your bot name, greeting, tone, and colors. Customize the appearance to match your brand perfectly.' },
+                    { n: '3', title: 'Deploy Everywhere', desc: 'Copy the one-line script tag and paste it into your website. Updates sync automatically as your content changes.' },
+                  ].map(({ n, title, desc }, i) => (
+                    <div key={n} className="flex gap-6">
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">{n}</div>
+                        {i < 2 && <div className="w-px flex-1 bg-gray-200 mt-2"/>}
+                      </div>
+                      <div className="pb-2">
+                        <h4 className="font-semibold text-gray-900 mb-1">{title}</h4>
+                        <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="md:w-1/2 w-full">
+                <div className="bg-[#dce9ff] rounded-2xl p-4 overflow-hidden border border-gray-200">
+                  <img
+                    alt="BotForge Infrastructure"
+                    className="rounded-xl w-full h-96 object-cover shadow-lg"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNyzYwcgA-rpB2P8kzjIqiPgMJsosbvRZOr7cfCHXISMCkXjgZsywytwJefieel2xA2e_7vCg6vgS4qy9sYue5v87ol6phT3QxZW_-7ddyFRW9qNPehMpVzXCNkuP3KYVXYMG03CYNQDHoBIo8fHt8hfuBh-QXbgdTbo5rIpDnctdLsgnK45SoOYsMZojGWY4i8C-DeWFX5r4egbPJu_cciorKsCBnFptypI0UZTFL7l9z46TxoSqYUO0CR6kFIi9mfLeLVgl3Pfk"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Testimonials ── */}
+        <section className="py-16 px-8 bg-[#eff4ff]">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Trusted by Data-Driven Teams</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  text: '"BotForge transformed our customer support. The AI answers questions with incredible accuracy using our actual website content. Setup took less than 5 minutes."',
+                  initials: 'JD', name: 'James Darnell', role: 'CTO, CloudScale Systems', color: 'bg-gray-800'
+                },
+                {
+                  text: '"The embed widget is beautiful and completely customizable. It matches our brand perfectly and our visitors love the instant AI responses."',
+                  initials: 'SL', name: 'Sarah Liang', role: 'Lead Designer, FintechPro', color: 'bg-blue-700'
+                },
+              ].map(({ text, initials, name, role, color }) => (
+                <div key={name} className="bg-white p-10 rounded-xl border border-gray-200 shadow-sm">
+                  <div className="flex gap-1 mb-6">
+                    {[...Array(5)].map((_, i) => <StarIcon key={i} />)}
+                  </div>
+                  <p className="text-base italic text-gray-700 mb-6 leading-relaxed">{text}</p>
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-full ${color} flex items-center justify-center text-white font-bold text-sm`}>
+                      {initials}
+                    </div>
+                    <div>
+                      <h5 className="font-semibold text-gray-900 text-sm">{name}</h5>
+                      <p className="text-xs text-gray-400">{role}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section id="pricing" className="py-16 px-8 bg-[#f8f9ff]">
+          <div className="max-w-4xl mx-auto bg-gray-900 text-white p-16 rounded-[2rem] text-center relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_top_right,_#0266ff_0%,_transparent_60%)]"/>
+            <h2 className="text-3xl font-bold mb-4 relative z-10">Ready to automate your support?</h2>
+            <p className="text-gray-400 text-lg mb-10 relative z-10 max-w-xl mx-auto">
+              Join 1,200+ companies using BotForge to bridge the gap between static websites and AI-powered support.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
               <Link to="/register"
-                className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold transition-colors text-sm ${
-                  popular ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-800 hover:bg-gray-700 text-gray-200'
-                }`}>
-                Get Started <ArrowIcon />
+                className="bg-blue-600 text-white px-10 py-4 rounded-lg text-xs font-bold hover:bg-blue-700 transition active:scale-95 uppercase tracking-wide">
+                Get Started Free
+              </Link>
+              <Link to="/login"
+                className="bg-transparent border border-gray-600 text-white px-10 py-4 rounded-lg text-xs font-bold hover:bg-gray-800 transition uppercase tracking-wide">
+                Login
               </Link>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* CTA Banner */}
-      <section className="py-20 px-8 max-w-4xl mx-auto text-center">
-        <div className="bg-blue-950/30 border border-blue-900/50 rounded-3xl p-12 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-transparent pointer-events-none" />
-          <div className="flex justify-center mb-6"><BotIcon /></div>
-          <h2 className="text-3xl font-bold mb-4">Ready to add AI to your website?</h2>
-          <p className="text-gray-400 mb-8">Join thousands of businesses using BotForge to serve their visitors 24/7.</p>
-          <Link to="/register"
-            className="inline-flex items-center gap-2 px-10 py-4 bg-blue-600 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-all hover:shadow-[0_0_24px_rgba(37,99,235,0.4)]">
-            Start for Free <ArrowIcon />
-          </Link>
-        </div>
-      </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="py-10 text-center text-gray-600 border-t border-gray-900">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <BotIcon />
-          <span className="font-bold text-gray-400">BotForge</span>
+      {/* ── Footer ── */}
+      <footer className="bg-white w-full py-10 border-t border-gray-200">
+        <div className="flex flex-col md:flex-row justify-between items-center px-8 gap-4 max-w-full mx-auto">
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <div className="flex items-center gap-2">
+              <BotIcon />
+              <span className="text-xs font-bold uppercase tracking-widest text-gray-900">BOTFORGE</span>
+            </div>
+            <p className="text-gray-400 text-sm">© 2026 BotForge AI. Built for precision.</p>
+          </div>
+          <div className="flex gap-8 text-sm text-gray-500">
+            <a className="hover:text-blue-600 transition" href="#">Privacy Policy</a>
+            <a className="hover:text-blue-600 transition" href="#">Terms of Service</a>
+            <a className="hover:text-blue-600 transition" href="#">Status</a>
+            <a className="hover:text-blue-600 transition" href="#">Contact</a>
+          </div>
+          <div className="flex gap-4 text-gray-400">
+            <a className="hover:text-blue-600 transition" href="#"><LangIcon /></a>
+            <a className="hover:text-blue-600 transition" href="#"><HubIcon /></a>
+          </div>
         </div>
-        <p className="text-sm">© 2026 BotForge AI. Built with ❤️ for the web.</p>
       </footer>
     </div>
   );

@@ -2,153 +2,137 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getWebsites, addWebsite, deleteWebsite, recrawlWebsite, getMe } from '../services/api';
 
-// ─── Custom SVG Icons ─────────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 const BotIcon = () => (
-  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-    <rect x="8" y="14" width="32" height="26" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="2"/>
-    <circle cx="18" cy="26" r="4" fill="#3B82F6"/>
-    <circle cx="30" cy="26" r="4" fill="#3B82F6"/>
-    <circle cx="18" cy="26" r="2" fill="#93C5FD"/>
-    <circle cx="30" cy="26" r="2" fill="#93C5FD"/>
-    <path d="M19 34 Q24 38 29 34" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M24 14 L24 8" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="24" cy="6" r="2.5" fill="#60A5FA"/>
-    <path d="M10 28 L4 28" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M44 28 L38 28" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="3" cy="28" r="2" fill="#60A5FA"/>
-    <circle cx="45" cy="28" r="2" fill="#60A5FA"/>
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
+    <rect x="5" y="9" width="22" height="18" rx="6" fill="rgba(0,80,204,0.12)" stroke="#0050cc" strokeWidth="1.5"/>
+    <circle cx="12" cy="17" r="2.5" fill="#0050cc"/>
+    <circle cx="20" cy="17" r="2.5" fill="#0050cc"/>
+    <circle cx="12" cy="17" r="1" fill="#dae1ff"/>
+    <circle cx="20" cy="17" r="1" fill="#dae1ff"/>
+    <path d="M13 22 Q16 24.5 19 22" stroke="#0050cc" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M16 9V5" stroke="#0050cc" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="16" cy="4" r="1.5" fill="#0050cc"/>
   </svg>
 );
 
 const GlobeIcon = () => (
-  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-16 h-16">
-    <defs>
-      <linearGradient id="globeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.2"/>
-        <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.05"/>
-      </linearGradient>
-    </defs>
-    <circle cx="32" cy="32" r="28" stroke="#3B82F6" strokeWidth="2" fill="url(#globeGrad)"/>
-    <ellipse cx="32" cy="32" rx="12" ry="28" stroke="#3B82F6" strokeWidth="1.5" opacity="0.4"/>
-    <ellipse cx="32" cy="32" rx="28" ry="12" stroke="#3B82F6" strokeWidth="1.5" opacity="0.4"/>
-    <line x1="4" y1="32" x2="60" y2="32" stroke="#3B82F6" strokeWidth="1.5" opacity="0.3"/>
-    <line x1="32" y1="4" x2="32" y2="60" stroke="#3B82F6" strokeWidth="1.5" opacity="0.3"/>
-    <circle cx="32" cy="32" r="4" fill="#60A5FA"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+    <ellipse cx="12" cy="12" rx="4" ry="9" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M3 12H21" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M3.5 8H20.5M3.5 16H20.5" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
+  </svg>
+);
+
+const ChipIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M9 3V7M12 3V7M15 3V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M9 17V21M12 17V21M15 17V21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M3 9H7M3 12H7M3 15H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M17 9H21M17 12H21M17 15H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const DocIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <path d="M4 4C4 2.89543 4.89543 2 6 2H13L20 9V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4Z" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M13 2V9H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8 13H16M8 17H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
 const PlusIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-    <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-  </svg>
-);
-
-const ArrowIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
-    <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
 
-const RecrawlIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
-    <path d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C12.5 3 14.7 4.3 15.8 6.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M15 3V7H11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const RefreshIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M20 10C20 6.13401 16.866 3 13 3C9.13401 3 6 6.13401 6 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M4 10H8V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M4 14C4 17.866 7.13401 21 11 21C14.866 21 18 17.866 18 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M20 14H16V18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
-    <path d="M3 5H17M7 5V3C7 2.44772 7.44772 2 8 2H12C12.5523 2 13 2.44772 13 3V5M8 8V15M12 8V15M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M3 6H21M8 6V4H16V6M19 6L18 20C18 21.1046 17.1046 22 16 22H8C6.89543 22 6 21.1046 6 20L5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const CheckIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 flex-shrink-0">
-    <circle cx="10" cy="10" r="9" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="1.5"/>
-    <path d="M6 10L9 13L14 7" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const ShieldIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-400">
-    <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)" strokeLinejoin="round"/>
-    <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const ZapIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-400">
-    <path d="M13 2L4 14H12L11 22L20 10H12L13 2Z" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)" strokeLinejoin="round"/>
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
 const LogoutIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
-    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M16 17L21 12L16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 17L21 12L16 7M21 12H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const PageIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
-    <path d="M4 4C4 2.89543 4.89543 2 6 2H10L16 8V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V4Z" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M10 2V8H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const ShieldIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const BotIdIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
-    <rect x="3" y="7" width="14" height="6" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="6" cy="10" r="1" fill="currentColor"/>
-    <circle cx="10" cy="10" r="1" fill="currentColor"/>
-    <circle cx="14" cy="10" r="1" fill="currentColor"/>
+const XIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
-const StatusIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
-    <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.5"/>
-  </svg>
-);
+// ─── Status Config ─────────────────────────────────────────────────────────────
+
+const STATUS = {
+  pending:  { dot: 'bg-amber-400',  badge: 'bg-amber-50 text-amber-700 border-amber-200',    label: 'Pending'  },
+  crawling: { dot: 'bg-blue-500',   badge: 'bg-blue-50 text-blue-700 border-blue-200',        label: 'Crawling' },
+  ready:    { dot: 'bg-emerald-500',badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',label: 'Ready'   },
+  failed:   { dot: 'bg-red-500',    badge: 'bg-red-50 text-red-700 border-red-200',            label: 'Failed'  },
+};
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [websites, setWebsites] = useState([]);
-  const [user, setUser] = useState(null);
+  const [user, setUser]     = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
-  const [newUrl, setNewUrl] = useState('');
-  const [adding, setAdding] = useState(false);
-  const [error, setError] = useState('');
+  const [newUrl, setNewUrl]   = useState('');
+  const [adding, setAdding]   = useState(false);
+  const [error, setError]     = useState('');
 
   useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
-  try {
-    const [webRes, userRes] = await Promise.all([getWebsites(), getMe()]);
-    setWebsites(webRes.data.data.websites);
-    setUser(userRes.data.data.user);
-    // ← Yeh add karo
-    localStorage.setItem('user', JSON.stringify(userRes.data.data.user));
-  } catch {
-    navigate('/login');
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const [webRes, userRes] = await Promise.all([getWebsites(), getMe()]);
+      setWebsites(webRes.data.data.websites);
+      setUser(userRes.data.data.user);
+      localStorage.setItem('user', JSON.stringify(userRes.data.data.user));
+    } catch {
+      navigate('/login');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAdd = async (e) => {
     e.preventDefault();
-    setAdding(true);
-    setError('');
+    setAdding(true); setError('');
     try {
       await addWebsite({ url: newUrl });
-      setNewUrl('');
-      setShowAdd(false);
+      setNewUrl(''); setShowAdd(false);
       fetchData();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add website');
@@ -158,18 +142,14 @@ export default function Dashboard() {
   };
 
   const handleDelete = async (e, id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!confirm('Delete this website?')) return;
-    await deleteWebsite(id);
-    fetchData();
+    e.preventDefault(); e.stopPropagation();
+    if (!confirm('Delete this website and all its data?')) return;
+    await deleteWebsite(id); fetchData();
   };
 
   const handleRecrawl = async (e, id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await recrawlWebsite(id);
-    fetchData();
+    e.preventDefault(); e.stopPropagation();
+    await recrawlWebsite(id); fetchData();
   };
 
   const handleLogout = () => {
@@ -178,212 +158,225 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  const statusConfig = {
-    pending: { color: 'bg-yellow-500', label: 'Pending', bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/30' },
-    crawling: { color: 'bg-blue-500', label: 'Crawling', bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' },
-    ready: { color: 'bg-green-500', label: 'Ready', bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/30' },
-    failed: { color: 'bg-red-500', label: 'Failed', bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/30' },
-  };
-
   if (loading) return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"/>
-        <div className="text-gray-400 text-sm">Loading your dashboard...</div>
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"/>
+        <span className="text-sm text-gray-400 font-medium">Loading workspace...</span>
       </div>
     </div>
   );
 
+  const totalPages = websites.reduce((a, w) => a + (w.pages_crawled || 0), 0);
+  const activeBots = websites.filter(w => w.status === 'ready').length;
+
   return (
-    <div className="min-h-screen bg-gray-950 text-white selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#f8f9ff] text-gray-900" style={{ fontFamily: "'Inter', sans-serif" }}>
 
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/60 sticky top-0 bg-gray-950/80 backdrop-blur-md z-50">
-  <div className="flex items-center gap-2.5">
-    <BotIcon />
-    <span className="text-xl font-bold text-white">BotForge</span>
-  </div>
-  <div className="flex items-center gap-4">
+      {/* ── Navbar ── */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <nav className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2">
+            <BotIcon />
+            <span className="font-bold text-lg text-gray-900 tracking-tight">BotForge</span>
+          </div>
 
-    {/* Admin button */}
-    {user?.is_admin && (
-      <Link to="/admin"
-        className="px-4 py-2 text-sm text-red-400 border border-red-800 rounded-lg hover:bg-red-900/30 transition flex items-center gap-2">
-        🔧 Admin
-      </Link>
-    )}
+          <div className="flex items-center gap-3">
+            {user?.is_admin && (
+              <Link to="/admin"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition">
+                <ShieldIcon /> Admin Panel
+              </Link>
+            )}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg">
+              <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
+                {user?.name?.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+              <span className="px-1.5 py-0.5 text-xs font-semibold bg-blue-600 text-white rounded capitalize">
+                {user?.plan}
+              </span>
+            </div>
+            <button onClick={handleLogout}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+              <LogoutIcon /> Logout
+            </button>
+          </div>
+        </nav>
+      </header>
 
-    <span className="text-gray-400 text-sm hidden sm:flex items-center gap-2">
-      <span className="w-2 h-2 rounded-full bg-green-500"/>
-      {user?.name}
-      <span className="px-2 py-0.5 bg-blue-950/60 border border-blue-800/40 rounded-full text-blue-400 text-xs capitalize">
-        {user?.plan}
-      </span>
-    </span>
-    <button onClick={handleLogout}
-      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-400 hover:text-white border border-gray-700 hover:border-gray-600 rounded-lg transition">
-      <LogoutIcon />
-      <span className="hidden sm:inline">Logout</span>
-    </button>
-  </div>
-</nav>
+      <main className="max-w-7xl mx-auto px-8 py-8">
 
-      <div className="max-w-5xl mx-auto px-8 py-10">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-10">
+        {/* ── Page Header ── */}
+        <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-1">My Websites</h1>
-            <p className="text-gray-500 text-sm">
-              {websites.length} website{websites.length !== 1 ? 's' : ''} in your workspace
-            </p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">My Websites</h1>
+            <p className="text-sm text-gray-500">{websites.length} site{websites.length !== 1 ? 's' : ''} in your workspace</p>
           </div>
           <button onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.3)]">
-            <PlusIcon />
-            Add Website
+            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition active:scale-95">
+            <PlusIcon /> Add Website
           </button>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+        {/* ── Stats Bento ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[
-            { label: 'Total Websites', value: websites.length, icon: GlobeIcon, color: 'from-blue-500/20 to-blue-600/10' },
-            { label: 'Active Bots', value: websites.filter(w => w.status === 'ready').length, icon: BotIcon, color: 'from-green-500/20 to-emerald-600/10' },
-            { label: 'Pages Crawled', value: websites.reduce((acc, w) => acc + (w.pages_crawled || 0), 0), icon: PageIcon, color: 'from-purple-500/20 to-violet-600/10' },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-gray-900/40 border border-gray-800 rounded-2xl p-6 flex items-center gap-4 hover:border-gray-700 transition-colors">
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
-                <stat.icon />
+            { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon,  color: 'text-blue-600',    bg: 'bg-blue-50' },
+            { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,   color: 'text-emerald-600', bg: 'bg-emerald-50' },
+            { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,    color: 'text-violet-600',  bg: 'bg-violet-50' },
+          ].map(({ label, value, Icon, color, bg }) => (
+            <div key={label} className="bg-white border border-gray-200 rounded-xl p-5 flex items-center gap-4 hover:border-blue-200 transition-colors">
+              <div className={`w-11 h-11 rounded-lg ${bg} flex items-center justify-center ${color}`}>
+                <Icon />
               </div>
               <div>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-gray-500 text-sm">{stat.label}</div>
+                <div className="text-2xl font-bold text-gray-900">{value}</div>
+                <div className="text-sm text-gray-500">{label}</div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Add Website Modal */}
-        {showAdd && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-            <div className="bg-gray-900 rounded-3xl p-8 w-full max-w-md border border-gray-800 shadow-2xl">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-blue-950/60 border border-blue-800/40 flex items-center justify-center">
-                  <PlusIcon />
-                </div>
-                <h2 className="text-xl font-bold">Add New Website</h2>
-              </div>
-              {error && (
-                <div className="bg-red-950/50 border border-red-500/50 text-red-300 px-4 py-3 rounded-xl mb-4 text-sm flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500"/>
-                  {error}
-                </div>
-              )}
-              <form onSubmit={handleAdd} className="space-y-5">
-                <div>
-                  <label className="text-sm text-gray-400 mb-2 block font-medium">Website URL</label>
-                  <input
-                    type="url"
-                    required
-                    placeholder="https://example.com"
-                    value={newUrl}
-                    onChange={(e) => setNewUrl(e.target.value)}
-                    className="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3.5 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 transition-all"
-                  />
-                </div>
-                <div className="flex gap-3">
-                  <button type="button" onClick={() => setShowAdd(false)}
-                    className="flex-1 py-3.5 border border-gray-700 rounded-xl hover:bg-gray-800 transition font-medium">
-                    Cancel
-                  </button>
-                  <button type="submit" disabled={adding}
-                    className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                    {adding ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/>
-                        Adding...
-                      </>
-                    ) : (
-                      <>
-                        Add Website <ArrowIcon />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Websites List */}
+        {/* ── Websites List ── */}
         {websites.length === 0 ? (
-          <div className="text-center py-24 border-2 border-dashed border-gray-800 rounded-3xl bg-gray-900/20">
-            <div className="flex justify-center mb-6">
+
+          <div className="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-16 text-center">
+            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-600">
               <GlobeIcon />
             </div>
-            <h3 className="text-xl font-semibold mb-2">No websites yet</h3>
-            <p className="text-gray-500 mb-8 max-w-sm mx-auto">Add your first website and let our AI crawl and build a smart knowledge base for your chatbot.</p>
+            <h3 className="font-semibold text-gray-900 mb-2">No websites yet</h3>
+            <p className="text-sm text-gray-400 mb-6 max-w-xs mx-auto">
+              Add your first website and our AI will crawl it and build a smart chatbot knowledge base.
+            </p>
             <button onClick={() => setShowAdd(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] mx-auto">
-              <PlusIcon />
-              Add Your First Website
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
+              <PlusIcon /> Add Your First Website
             </button>
           </div>
+
         ) : (
-          <div className="space-y-4">
-            {websites.map((site) => {
-              const status = statusConfig[site.status] || statusConfig.pending;
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+
+            {/* Table Header */}
+            <div className="grid grid-cols-12 px-6 py-3 border-b border-gray-100 bg-gray-50/50">
+              <div className="col-span-5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Website</div>
+              <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</div>
+              <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Pages</div>
+              <div className="col-span-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</div>
+            </div>
+
+            {/* Rows */}
+            {websites.map((site, i) => {
+              const st = STATUS[site.status] || STATUS.pending;
               return (
                 <Link to={`/websites/${site.id}`} key={site.id}
-                  className="group bg-gray-900/40 border border-gray-800 hover:border-blue-800/50 rounded-2xl p-6 flex items-center justify-between transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.07)] hover:-translate-y-0.5 block">
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <div className={`w-3 h-3 rounded-full ${site.status === 'crawling' ? 'animate-pulse' : ''}`}>
-                        <div className={`w-full h-full rounded-full ${status.color}`}/>
+                  className={`grid grid-cols-12 px-6 py-4 items-center hover:bg-blue-50/40 transition-colors group ${i < websites.length - 1 ? 'border-b border-gray-100' : ''}`}>
+
+                  {/* Name + URL */}
+                  <div className="col-span-5 flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${st.dot} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
+                    <div className="min-w-0">
+                      <div className="font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                        {site.name || site.url}
                       </div>
-                      <div className={`absolute inset-0 w-3 h-3 rounded-full ${status.color} animate-ping opacity-30 ${site.status === 'crawling' ? '' : 'hidden'}`}/>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{site.name || site.url}</h3>
-                      <p className="text-gray-500 text-sm">{site.url}</p>
-                      <div className="flex items-center gap-4 mt-2 text-xs">
-                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${status.bg} ${status.text} ${status.border}`}>
-                          <StatusIcon />
-                          {status.label}
-                        </span>
-                        <span className="flex items-center gap-1.5 text-gray-500">
-                          <PageIcon />
-                          {site.pages_crawled} pages
-                        </span>
-                        <span className="flex items-center gap-1.5 text-gray-500">
-                          <BotIdIcon />
-                          {site.bot_id?.slice(0, 8)}...
-                        </span>
-                      </div>
+                      <div className="text-xs text-gray-400 truncate">{site.url}</div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                  {/* Status Badge */}
+                  <div className="col-span-2">
+                    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border rounded-full ${st.badge}`}>
+                      {st.label}
+                    </span>
+                  </div>
+
+                  {/* Pages */}
+                  <div className="col-span-2 text-sm text-gray-600 font-medium">
+                    {site.pages_crawled} <span className="text-gray-400 font-normal">pages</span>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="col-span-3 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={(e) => handleRecrawl(e, site.id)}
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-700 hover:border-blue-600 hover:text-blue-400 rounded-xl hover:bg-blue-950/30 transition-all"
-                      title="Recrawl website">
-                      <RecrawlIcon />
-                      <span className="hidden sm:inline">Recrawl</span>
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition">
+                      <RefreshIcon /> Recrawl
                     </button>
                     <button
                       onClick={(e) => handleDelete(e, site.id)}
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-red-900/50 text-red-400 hover:bg-red-950/30 rounded-xl transition-all"
-                      title="Delete website">
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-red-500 border border-red-100 rounded-lg hover:bg-red-50 transition">
                       <TrashIcon />
-                      <span className="hidden sm:inline">Delete</span>
                     </button>
+                    <div className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-600">
+                      <ArrowRightIcon />
+                    </div>
                   </div>
                 </Link>
               );
             })}
           </div>
         )}
-      </div>
+      </main>
+
+      {/* ── Add Modal ── */}
+      {showAdd && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
+
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+                  <PlusIcon />
+                </div>
+                <h2 className="font-semibold text-gray-900">Add New Website</h2>
+              </div>
+              <button onClick={() => setShowAdd(false)} className="text-gray-400 hover:text-gray-600 transition">
+                <XIcon />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {error && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                  {error}
+                </div>
+              )}
+              <form onSubmit={handleAdd} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Website URL</label>
+                  <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition">
+                    <GlobeIcon />
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://example.com"
+                      value={newUrl}
+                      onChange={(e) => setNewUrl(e.target.value)}
+                      className="flex-1 py-3 bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1.5">We'll crawl up to 100 pages automatically</p>
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <button type="button" onClick={() => setShowAdd(false)}
+                    className="flex-1 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                    Cancel
+                  </button>
+                  <button type="submit" disabled={adding}
+                    className="flex-1 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                    {adding ? (
+                      <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/> Adding...</>
+                    ) : (
+                      <>Add Website <ArrowRightIcon /></>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
