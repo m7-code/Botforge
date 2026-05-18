@@ -22,14 +22,14 @@ const BotIcon = () => (
 );
 
 const EmailIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400">
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition">
     <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
     <path d="M2 7L10 12L18 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
 const LockIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400">
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition">
     <rect x="4" y="9" width="12" height="9" rx="2" stroke="currentColor" strokeWidth="1.5"/>
     <path d="M7 9V6C7 4.34 8.34 3 10 3C11.66 3 13 4.34 13 6V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     <circle cx="10" cy="14" r="1.5" fill="currentColor"/>
@@ -59,6 +59,19 @@ const AlertIcon = () => (
   </svg>
 );
 
+const SunIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Login() {
@@ -67,6 +80,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [dark, setDark] = useState(false); // theme state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,24 +99,38 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 relative overflow-hidden">
-
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-blue-600/8 blur-[100px] rounded-full pointer-events-none" />
+    <div
+      className={`min-h-screen flex flex-col items-center justify-center px-4 transition-colors duration-300 ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      {/* Theme toggle */}
+      <button
+        onClick={() => setDark(!dark)}
+        className={`absolute top-6 right-6 p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+        title="Toggle dark mode"
+      >
+        {dark ? <SunIcon /> : <MoonIcon />}
+      </button>
 
       <div className="w-full max-w-sm relative z-10">
-
-        {/* Card - Compact */}
-        <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-800 shadow-2xl">
-
+        {/* Card */}
+        <div
+          className={`rounded-2xl p-6 border shadow-sm transition-colors ${dark ? 'bg-gray-900/80 backdrop-blur-sm border-gray-800' : 'bg-white border-gray-200'}`}
+        >
           {/* Logo */}
           <Link to="/" className="flex items-center justify-center gap-2 mb-6 group">
             <BotIcon />
-            <span className="text-lg font-bold text-white group-hover:text-blue-400 transition">BotForge</span>
+            <span className={`text-lg font-bold transition ${dark ? 'text-white group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'}`}>
+              BotForge
+            </span>
           </Link>
 
-          <h2 className="text-xl font-bold text-white text-center mb-1">Welcome back</h2>
-          <p className="text-gray-500 text-xs text-center mb-6">Sign in to your account</p>
+          <h2 className={`text-xl font-bold text-center mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>
+            Welcome back
+          </h2>
+          <p className={`text-xs text-center mb-6 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
+            Sign in to your account
+          </p>
 
           {/* Error */}
           {error && (
@@ -113,13 +141,12 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-3">
-
             {/* Email */}
             <div>
-              <label htmlFor="email" className="text-xs text-gray-400 mb-1 block font-medium">
+              <label htmlFor="email" className={`text-xs mb-1 block font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
                 Email
               </label>
-              <div className="relative">
+              <div className="relative group">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <EmailIcon />
                 </div>
@@ -132,7 +159,7 @@ export default function Login() {
                   placeholder="john@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full bg-gray-800/80 border border-gray-700 rounded-lg pl-9 pr-3 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
+                  className={`w-full border rounded-lg pl-9 pr-3 py-2.5 placeholder-gray-400 focus:outline-none focus:ring-1 transition text-sm ${dark ? 'bg-gray-800/80 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500/30' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500/30'}`}
                 />
               </div>
             </div>
@@ -140,14 +167,14 @@ export default function Login() {
             {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label htmlFor="password" className="text-xs text-gray-400 font-medium">
+                <label htmlFor="password" className={`text-xs font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-[11px] text-blue-400 hover:text-blue-300 transition">
+                <Link to="/forgot-password" className="text-[11px] text-blue-500 hover:text-blue-600 transition">
                   Forgot?
                 </Link>
               </div>
-              <div className="relative">
+              <div className="relative group">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <LockIcon />
                 </div>
@@ -160,12 +187,13 @@ export default function Login() {
                   placeholder="••••••••"
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full bg-gray-800/80 border border-gray-700 rounded-lg pl-9 pr-12 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition text-sm"
+                  className={`w-full border rounded-lg pl-9 pr-12 py-2.5 placeholder-gray-400 focus:outline-none focus:ring-1 transition text-sm ${dark ? 'bg-gray-800/80 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500/30' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500/30'}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition text-[11px]">
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 transition text-[11px] ${dark ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
+                >
                   {showPass ? 'Hide' : 'Show'}
                 </button>
               </div>
@@ -175,11 +203,12 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm hover:shadow-[0_0_16px_rgba(37,99,235,0.3)]">
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 text-sm text-white hover:shadow-[0_0_16px_rgba(37,99,235,0.3)]"
+            >
               {loading ? (
                 <>
                   <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" strokeDasharray="31.4" strokeDashoffset="10"/>
+                    <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" strokeDasharray="31.4" strokeDashoffset="10" />
                   </svg>
                   Signing in...
                 </>
@@ -191,9 +220,9 @@ export default function Login() {
 
           {/* Divider */}
           <div className="my-5 flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-800" />
-            <span className="text-gray-600 text-[10px] uppercase tracking-wider">or</span>
-            <div className="flex-1 h-px bg-gray-800" />
+            <div className={`flex-1 h-px ${dark ? 'bg-gray-800' : 'bg-gray-200'}`} />
+            <span className={`text-[10px] uppercase tracking-wider ${dark ? 'text-gray-600' : 'text-gray-400'}`}>or</span>
+            <div className={`flex-1 h-px ${dark ? 'bg-gray-800' : 'bg-gray-200'}`} />
           </div>
 
           {/* Google */}
@@ -203,16 +232,16 @@ export default function Login() {
           </button>
 
           {/* Footer */}
-          <p className="text-center text-gray-500 text-xs mt-5">
+          <p className={`text-center text-xs mt-5 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
             No account?{' '}
-            <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition">
+            <Link to="/register" className="text-blue-500 hover:text-blue-600 font-medium transition">
               Sign up free
             </Link>
           </p>
         </div>
 
         {/* Bottom text */}
-        <p className="text-center text-gray-600 text-[10px] mt-4">
+        <p className={`text-center text-[10px] mt-4 ${dark ? 'text-gray-600' : 'text-gray-400'}`}>
           By signing in, you agree to our Terms & Privacy Policy
         </p>
       </div>

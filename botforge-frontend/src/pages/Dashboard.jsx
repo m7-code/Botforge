@@ -91,6 +91,19 @@ const XIcon = () => (
   </svg>
 );
 
+const SunIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // ─── Status Config ─────────────────────────────────────────────────────────────
 
 const STATUS = {
@@ -98,6 +111,14 @@ const STATUS = {
   crawling: { dot: 'bg-blue-500',   badge: 'bg-blue-50 text-blue-700 border-blue-200',        label: 'Crawling' },
   ready:    { dot: 'bg-emerald-500',badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',label: 'Ready'   },
   failed:   { dot: 'bg-red-500',    badge: 'bg-red-50 text-red-700 border-red-200',            label: 'Failed'  },
+};
+
+// Dark‑mode adjustments for status badges
+const STATUS_DARK = {
+  pending:  { dot: 'bg-amber-400',  badge: 'bg-amber-400/10 text-amber-300 border-amber-500/20',    label: 'Pending'  },
+  crawling: { dot: 'bg-blue-400',   badge: 'bg-blue-400/10 text-blue-300 border-blue-500/20',        label: 'Crawling' },
+  ready:    { dot: 'bg-emerald-400',badge: 'bg-emerald-400/10 text-emerald-300 border-emerald-500/20',label: 'Ready'   },
+  failed:   { dot: 'bg-red-400',    badge: 'bg-red-400/10 text-red-300 border-red-500/20',            label: 'Failed'  },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -111,6 +132,7 @@ export default function Dashboard() {
   const [newUrl, setNewUrl]   = useState('');
   const [adding, setAdding]   = useState(false);
   const [error, setError]     = useState('');
+  const [dark, setDark]       = useState(false); // theme state
 
   useEffect(() => { fetchData(); }, []);
 
@@ -159,10 +181,10 @@ export default function Dashboard() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className={`min-h-screen flex items-center justify-center transition-colors ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"/>
-        <span className="text-sm text-gray-400 font-medium">Loading workspace...</span>
+        <span className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Loading workspace...</span>
       </div>
     </div>
   );
@@ -171,34 +193,43 @@ export default function Dashboard() {
   const activeBots = websites.filter(w => w.status === 'ready').length;
 
   return (
-    <div className="min-h-screen bg-[#f8f9ff] text-gray-900" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-white' : 'bg-[#f8f9ff] text-gray-900'}`} style={{ fontFamily: "'Inter', sans-serif" }}>
 
       {/* ── Navbar ── */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <header className={`border-b sticky top-0 z-50 transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
         <nav className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
             <BotIcon />
-            <span className="font-bold text-lg text-gray-900 tracking-tight">BotForge</span>
+            <span className={`font-bold text-lg tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Theme toggle */}
+            <button
+              onClick={() => setDark(!dark)}
+              className={`p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+              title="Toggle dark mode"
+            >
+              {dark ? <SunIcon /> : <MoonIcon />}
+            </button>
+
             {user?.is_admin && (
               <Link to="/admin"
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition">
                 <ShieldIcon /> Admin Panel
               </Link>
             )}
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg">
+            <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg transition-colors ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
               <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+              <span className={`text-sm font-medium ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{user?.name}</span>
               <span className="px-1.5 py-0.5 text-xs font-semibold bg-blue-600 text-white rounded capitalize">
                 {user?.plan}
               </span>
             </div>
             <button onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg transition ${dark ? 'text-gray-400 border-gray-700 hover:text-gray-200 hover:bg-gray-800' : 'text-gray-500 border-gray-200 hover:text-gray-900 hover:bg-gray-50'}`}>
               <LogoutIcon /> Logout
             </button>
           </div>
@@ -210,8 +241,8 @@ export default function Dashboard() {
         {/* ── Page Header ── */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">My Websites</h1>
-            <p className="text-sm text-gray-500">{websites.length} site{websites.length !== 1 ? 's' : ''} in your workspace</p>
+            <h1 className={`text-2xl font-bold mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>My Websites</h1>
+            <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{websites.length} site{websites.length !== 1 ? 's' : ''} in your workspace</p>
           </div>
           <button onClick={() => setShowAdd(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition active:scale-95">
@@ -222,17 +253,19 @@ export default function Dashboard() {
         {/* ── Stats Bento ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[
-            { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon,  color: 'text-blue-600',    bg: 'bg-blue-50' },
-            { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,   color: 'text-emerald-600', bg: 'bg-emerald-50' },
-            { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,    color: 'text-violet-600',  bg: 'bg-violet-50' },
-          ].map(({ label, value, Icon, color, bg }) => (
-            <div key={label} className="bg-white border border-gray-200 rounded-xl p-5 flex items-center gap-4 hover:border-blue-200 transition-colors">
-              <div className={`w-11 h-11 rounded-lg ${bg} flex items-center justify-center ${color}`}>
+            { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon,  color: 'text-blue-600',    bg: 'bg-blue-50',   darkBg: 'bg-blue-400/10', darkColor: 'text-blue-400' },
+            { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,   color: 'text-emerald-600', bg: 'bg-emerald-50', darkBg: 'bg-emerald-400/10', darkColor: 'text-emerald-400' },
+            { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,    color: 'text-violet-600',  bg: 'bg-violet-50', darkBg: 'bg-violet-400/10', darkColor: 'text-violet-400' },
+          ].map(({ label, value, Icon, color, bg, darkBg, darkColor }) => (
+            <div key={label} className={`rounded-xl p-5 flex items-center gap-4 border transition-colors ${
+              dark ? `bg-gray-900 border-gray-800 hover:border-blue-800` : `bg-white border-gray-200 hover:border-blue-200`
+            }`}>
+              <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${dark ? darkBg + ' ' + darkColor : bg + ' ' + color}`}>
                 <Icon />
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">{value}</div>
-                <div className="text-sm text-gray-500">{label}</div>
+                <div className={`text-2xl font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>{value}</div>
+                <div className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{label}</div>
               </div>
             </div>
           ))}
@@ -241,12 +274,16 @@ export default function Dashboard() {
         {/* ── Websites List ── */}
         {websites.length === 0 ? (
 
-          <div className="bg-white border-2 border-dashed border-gray-200 rounded-2xl p-16 text-center">
-            <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-600">
+          <div className={`border-2 border-dashed rounded-2xl p-16 text-center transition-colors ${
+            dark ? 'border-gray-800 bg-gray-900/40' : 'border-gray-200 bg-white'
+          }`}>
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
+              dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'
+            }`}>
               <GlobeIcon />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">No websites yet</h3>
-            <p className="text-sm text-gray-400 mb-6 max-w-xs mx-auto">
+            <h3 className={`font-semibold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>No websites yet</h3>
+            <p className={`text-sm mb-6 max-w-xs mx-auto ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
               Add your first website and our AI will crawl it and build a smart chatbot knowledge base.
             </p>
             <button onClick={() => setShowAdd(true)}
@@ -256,10 +293,14 @@ export default function Dashboard() {
           </div>
 
         ) : (
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+          <div className={`border rounded-2xl overflow-hidden transition-colors ${
+            dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'
+          }`}>
 
             {/* Table Header */}
-            <div className="grid grid-cols-12 px-6 py-3 border-b border-gray-100 bg-gray-50/50">
+            <div className={`grid grid-cols-12 px-6 py-3 border-b ${
+              dark ? 'border-gray-800 bg-gray-950/50' : 'border-gray-100 bg-gray-50/50'
+            }`}>
               <div className="col-span-5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Website</div>
               <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</div>
               <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Pages</div>
@@ -268,44 +309,50 @@ export default function Dashboard() {
 
             {/* Rows */}
             {websites.map((site, i) => {
-              const st = STATUS[site.status] || STATUS.pending;
+              const statusConfig = dark ? STATUS_DARK[site.status] || STATUS_DARK.pending : STATUS[site.status] || STATUS.pending;
               return (
                 <Link to={`/websites/${site.id}`} key={site.id}
-                  className={`grid grid-cols-12 px-6 py-4 items-center hover:bg-blue-50/40 transition-colors group ${i < websites.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                  className={`grid grid-cols-12 px-6 py-4 items-center transition-colors group ${
+                    dark ? 'hover:bg-blue-500/5' : 'hover:bg-blue-50/40'
+                  } ${i < websites.length - 1 ? (dark ? 'border-b border-gray-800' : 'border-b border-gray-100') : ''}`}>
 
                   {/* Name + URL */}
                   <div className="col-span-5 flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${st.dot} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${statusConfig.dot} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
                     <div className="min-w-0">
-                      <div className="font-medium text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                      <div className={`font-medium truncate transition-colors ${dark ? 'text-gray-200 group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'}`}>
                         {site.name || site.url}
                       </div>
-                      <div className="text-xs text-gray-400 truncate">{site.url}</div>
+                      <div className={`text-xs truncate ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{site.url}</div>
                     </div>
                   </div>
 
                   {/* Status Badge */}
                   <div className="col-span-2">
-                    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border rounded-full ${st.badge}`}>
-                      {st.label}
+                    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border rounded-full ${statusConfig.badge}`}>
+                      {statusConfig.label}
                     </span>
                   </div>
 
                   {/* Pages */}
-                  <div className="col-span-2 text-sm text-gray-600 font-medium">
-                    {site.pages_crawled} <span className="text-gray-400 font-normal">pages</span>
+                  <div className={`col-span-2 text-sm font-medium ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
+                    {site.pages_crawled} <span className={`font-normal ${dark ? 'text-gray-500' : 'text-gray-400'}`}>pages</span>
                   </div>
 
                   {/* Actions */}
                   <div className="col-span-3 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={(e) => handleRecrawl(e, site.id)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50 transition">
+                      className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${
+                        dark ? 'text-gray-400 border-gray-700 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10' : 'text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50'
+                      }`}>
                       <RefreshIcon /> Recrawl
                     </button>
                     <button
                       onClick={(e) => handleDelete(e, site.id)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-red-500 border border-red-100 rounded-lg hover:bg-red-50 transition">
+                      className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${
+                        dark ? 'text-red-400 border-red-400/20 hover:bg-red-400/10' : 'text-red-500 border-red-100 hover:bg-red-50'
+                      }`}>
                       <TrashIcon />
                     </button>
                     <div className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-600">
@@ -322,30 +369,38 @@ export default function Dashboard() {
       {/* ── Add Modal ── */}
       {showAdd && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
+          <div className={`rounded-2xl shadow-2xl w-full max-w-md border overflow-hidden transition-colors ${
+            dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
+          }`}>
 
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div className={`flex items-center justify-between px-6 py-4 border-b ${
+              dark ? 'border-gray-800' : 'border-gray-100'
+            }`}>
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                  dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'
+                }`}>
                   <PlusIcon />
                 </div>
-                <h2 className="font-semibold text-gray-900">Add New Website</h2>
+                <h2 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>Add New Website</h2>
               </div>
-              <button onClick={() => setShowAdd(false)} className="text-gray-400 hover:text-gray-600 transition">
+              <button onClick={() => setShowAdd(false)} className={`transition ${dark ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}>
                 <XIcon />
               </button>
             </div>
 
             <div className="p-6">
               {error && (
-                <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                <div className="flex items-center gap-2 bg-red-950/50 border border-red-800/60 text-red-300 px-4 py-3 rounded-lg mb-4 text-sm">
                   {error}
                 </div>
               )}
               <form onSubmit={handleAdd} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Website URL</label>
-                  <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition">
+                  <label className={`block text-sm font-medium mb-1.5 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>Website URL</label>
+                  <div className={`flex items-center gap-2 border rounded-lg px-3 focus-within:ring-2 focus-within:ring-blue-100 transition ${
+                    dark ? 'bg-gray-800 border-gray-700 focus-within:border-blue-500' : 'bg-gray-50 border-gray-200 focus-within:border-blue-400'
+                  }`}>
                     <GlobeIcon />
                     <input
                       type="url"
@@ -353,14 +408,16 @@ export default function Dashboard() {
                       placeholder="https://example.com"
                       value={newUrl}
                       onChange={(e) => setNewUrl(e.target.value)}
-                      className="flex-1 py-3 bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
+                      className={`flex-1 py-3 bg-transparent text-sm placeholder-gray-400 focus:outline-none ${dark ? 'text-white' : 'text-gray-900'}`}
                     />
                   </div>
-                  <p className="text-xs text-gray-400 mt-1.5">We'll crawl up to 100 pages automatically</p>
+                  <p className={`text-xs mt-1.5 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>We'll crawl up to 100 pages automatically</p>
                 </div>
                 <div className="flex gap-3 pt-1">
                   <button type="button" onClick={() => setShowAdd(false)}
-                    className="flex-1 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                    className={`flex-1 py-2.5 text-sm font-medium border rounded-lg transition ${
+                      dark ? 'text-gray-400 border-gray-700 hover:bg-gray-800' : 'text-gray-600 border-gray-200 hover:bg-gray-50'
+                    }`}>
                     Cancel
                   </button>
                   <button type="submit" disabled={adding}

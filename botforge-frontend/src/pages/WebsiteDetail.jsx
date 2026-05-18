@@ -4,7 +4,7 @@ import { getWebsite, recrawlWebsite, deleteWebsite } from '../services/api';
 import API from '../services/api';
 
 // ─── Custom SVG Icons ─────────────────────────────────────────────────────────
-
+// (all icons remain the same, just adjust container backgrounds if needed)
 const BotIcon = () => (
   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
     <rect x="8" y="14" width="32" height="26" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3B82F6" strokeWidth="2"/>
@@ -57,7 +57,7 @@ const CopyIcon = () => (
 );
 
 const ChartIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-400">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)"/>
     <path d="M8 14L11 11L14 13L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <circle cx="18" cy="9" r="2" fill="currentColor"/>
@@ -65,7 +65,7 @@ const ChartIcon = () => (
 );
 
 const DocumentIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-400">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" fill="rgba(34,197,94,0.1)" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -73,21 +73,21 @@ const DocumentIcon = () => (
 );
 
 const StatusIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-400">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="rgba(168,85,247,0.1)"/>
     <circle cx="12" cy="12" r="4" fill="currentColor"/>
   </svg>
 );
 
 const PageIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
     <path d="M4 4C4 2.89543 4.89543 2 6 2H10L16 8V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V4Z" stroke="currentColor" strokeWidth="1.5"/>
     <path d="M10 2V8H16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
 const SearchIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-500">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
     <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
   </svg>
@@ -106,7 +106,7 @@ const ChevronRightIcon = () => (
 );
 
 const CodeIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-blue-400">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="2" fill="rgba(59,130,246,0.1)"/>
     <path d="M9 9L6 12L9 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M15 9L18 12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -114,7 +114,7 @@ const CodeIcon = () => (
 );
 
 const InfoIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
     <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5"/>
     <path d="M10 6V6.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
     <path d="M10 10V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -122,7 +122,7 @@ const InfoIcon = () => (
 );
 
 const ChunkIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
     <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
     <rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
     <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
@@ -131,9 +131,23 @@ const ChunkIcon = () => (
 );
 
 const WordIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-500">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
     <path d="M4 7V17C4 18.1046 4.89543 19 6 19H18C19.1046 19 20 18.1046 20 17V9C20 7.89543 19.1046 7 18 7H12L10 4H6C4.89543 4 4 4.89543 4 6V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M8 12H16M8 15H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+// Theme icons
+const SunIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -149,6 +163,7 @@ export default function WebsiteDetail() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [copied, setCopied] = useState(false);
+  const [dark, setDark] = useState(false); // theme state
   const perPage = 10;
 
   useEffect(() => {
@@ -206,22 +221,22 @@ export default function WebsiteDetail() {
   const paginatedChunks = filteredChunks.slice((page - 1) * perPage, page * perPage);
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+    <div className={`min-h-screen flex items-center justify-center transition-colors ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
       <div className="flex flex-col items-center gap-4">
         <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"/>
-        <div className="text-gray-400 text-sm">Loading website details...</div>
+        <div className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Loading website details...</div>
       </div>
     </div>
   );
 
   if (!website) return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+    <div className={`min-h-screen flex items-center justify-center transition-colors ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
       <div className="text-center">
         <div className="flex justify-center mb-4">
           <PageIcon />
         </div>
-        <div className="text-white text-xl font-semibold mb-2">Website not found</div>
-        <Link to="/dashboard" className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-2 justify-center">
+        <div className={`text-xl font-semibold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>Website not found</div>
+        <Link to="/dashboard" className={`text-sm flex items-center gap-2 justify-center transition ${dark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
           <ArrowLeftIcon /> Back to Dashboard
         </Link>
       </div>
@@ -231,26 +246,37 @@ export default function WebsiteDetail() {
   const status = statusConfig[website.status] || statusConfig.pending;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white selection:bg-blue-500/30">
-
+    <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-white' : 'bg-[#f8f9ff] text-gray-900'}`} style={{ fontFamily: "'Inter', sans-serif" }}>
+      
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-gray-800/60 sticky top-0 bg-gray-950/80 backdrop-blur-md z-50">
+      <nav className={`flex items-center justify-between px-8 py-4 border-b sticky top-0 z-50 backdrop-blur-md transition-colors ${
+        dark ? 'bg-gray-950/80 border-gray-800/60' : 'bg-white/80 border-gray-200'
+      }`}>
         <Link to="/dashboard" className="flex items-center gap-2.5">
           <BotIcon />
-          <span className="text-xl font-bold text-white">BotForge</span>
+          <span className={`text-xl font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
         </Link>
-        <Link to="/dashboard" className="flex items-center gap-2 text-gray-400 hover:text-white text-sm transition">
-          <ArrowLeftIcon /> Back to Dashboard
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setDark(!dark)}
+            className={`p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+            title="Toggle dark mode"
+          >
+            {dark ? <SunIcon /> : <MoonIcon />}
+          </button>
+          <Link to="/dashboard" className={`flex items-center gap-2 text-sm transition ${dark ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>
+            <ArrowLeftIcon /> Back to Dashboard
+          </Link>
+        </div>
       </nav>
 
       <div className="max-w-6xl mx-auto px-8 py-10">
         {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">{website.name || website.url}</h1>
+            <h1 className={`text-3xl font-bold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>{website.name || website.url}</h1>
             <a href={website.url} target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm transition group">
+              className={`inline-flex items-center gap-2 text-sm transition group ${dark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
               {website.url}
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 <ExternalLinkIcon />
@@ -261,11 +287,11 @@ export default function WebsiteDetail() {
                 <span className={`w-2 h-2 rounded-full ${status.dot} ${website.status === 'crawling' ? 'animate-pulse' : ''}`}/>
                 {website.status}
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs bg-gray-900 border border-gray-800 text-gray-400">
+              <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border ${dark ? 'bg-gray-800 border-gray-700 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'}`}>
                 <PageIcon />
                 {website.pages_crawled} pages crawled
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs bg-gray-900 border border-gray-800 text-gray-400">
+              <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border ${dark ? 'bg-gray-800 border-gray-700 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'}`}>
                 <ChunkIcon />
                 {chunks.length} chunks
               </span>
@@ -273,13 +299,13 @@ export default function WebsiteDetail() {
           </div>
           <div className="flex items-center gap-2">
             <button onClick={handleRecrawl}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm border border-gray-700 hover:border-blue-600 hover:text-blue-400 rounded-xl hover:bg-blue-950/30 transition-all"
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm border rounded-xl transition-all ${dark ? 'border-gray-700 hover:border-blue-600 hover:text-blue-400 hover:bg-blue-950/30' : 'border-gray-200 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50'}`}
               title="Recrawl website">
               <RecrawlIcon />
               <span className="hidden sm:inline">Recrawl</span>
             </button>
             <button onClick={handleDelete}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm border border-red-900/50 text-red-400 hover:bg-red-950/30 rounded-xl transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 text-sm border border-red-300/50 text-red-500 hover:bg-red-50 rounded-xl transition-all"
               title="Delete website">
               <TrashIcon />
               <span className="hidden sm:inline">Delete</span>
@@ -288,17 +314,21 @@ export default function WebsiteDetail() {
         </div>
 
         {/* Embed Widget Card */}
-        <div className="bg-gray-900/40 border border-gray-800 rounded-3xl p-8 mb-8 hover:border-blue-800/40 transition-colors">
+        <div className={`rounded-3xl p-8 mb-8 border transition-colors ${
+          dark ? 'bg-gray-900/40 border-gray-800 hover:border-blue-800/40' : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
+        }`}>
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 rounded-xl bg-blue-950/60 border border-blue-800/40 flex items-center justify-center">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${dark ? 'bg-blue-950/60 border border-blue-800/40' : 'bg-blue-50 border border-blue-200'}`}>
               <CodeIcon />
             </div>
             <div>
-              <h3 className="font-semibold text-white">Embed Widget</h3>
-              <p className="text-gray-500 text-xs">Add this script to your website</p>
+              <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>Embed Widget</h3>
+              <p className={`text-xs ${dark ? 'text-gray-500' : 'text-gray-400'}`}>Add this script to your website</p>
             </div>
           </div>
-          <div className="bg-gray-950 rounded-xl p-5 font-mono text-sm text-blue-300 break-all border border-gray-800/60">
+          <div className={`rounded-xl p-5 font-mono text-sm break-all border ${
+            dark ? 'bg-gray-950 text-blue-300 border-gray-800/60' : 'bg-gray-50 text-blue-800 border-gray-200'
+          }`}>
             {`<script src="http://localhost:5173/widget.js" data-bot-id="${website.bot_id}"></script>`}
           </div>
           <div className="flex items-center justify-between mt-4">
@@ -319,26 +349,26 @@ export default function WebsiteDetail() {
                 </>
               )}
             </button>
-            <span className="flex items-center gap-1.5 text-gray-600 text-xs">
+            <span className={`flex items-center gap-1.5 text-xs ${dark ? 'text-gray-600' : 'text-gray-400'}`}>
               <InfoIcon /> Paste in your HTML &lt;head&gt; or &lt;body&gt;
             </span>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 border-b border-gray-800">
+        <div className={`flex gap-1 mb-8 border-b ${dark ? 'border-gray-800' : 'border-gray-200'}`}>
           {['overview', 'chunks'].map(tab => (
             <button key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-3.5 text-sm font-semibold capitalize transition-all border-b-2 -mb-px rounded-t-xl ${
                 activeTab === tab
                   ? 'border-blue-500 text-blue-400 bg-blue-950/20'
-                  : 'border-transparent text-gray-500 hover:text-gray-300 hover:bg-gray-900/40'
+                  : `border-transparent ${dark ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-900/40' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`
               }`}>
               <span className="flex items-center gap-2">
                 {tab === 'overview' ? <ChartIcon /> : <DocumentIcon />}
                 {tab === 'overview' ? 'Overview' : `Chunks`}
-                {tab === 'chunks' && <span className="px-2 py-0.5 bg-gray-800 rounded-full text-xs">{chunks.length}</span>}
+                {tab === 'chunks' && <span className={`px-2 py-0.5 rounded-full text-xs ${dark ? 'bg-gray-800' : 'bg-gray-200'}`}>{chunks.length}</span>}
               </span>
             </button>
           ))}
@@ -349,58 +379,68 @@ export default function WebsiteDetail() {
           <div className="space-y-6">
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gray-900/40 border border-gray-800 hover:border-blue-800/40 rounded-2xl p-6 text-center transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.07)] hover:-translate-y-0.5">
+              <div className={`rounded-2xl p-6 text-center transition-all hover:shadow-lg hover:-translate-y-0.5 border ${
+                dark ? 'bg-gray-900/40 border-gray-800 hover:border-blue-800/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.07)]' : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
+              }`}>
                 <div className="flex justify-center mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-blue-950/60 border border-blue-800/40 flex items-center justify-center">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${dark ? 'bg-blue-950/60 border border-blue-800/40' : 'bg-blue-50 border border-blue-200'}`}>
                     <PageIcon />
                   </div>
                 </div>
-                <div className="text-4xl font-extrabold text-white mb-1">{website.pages_crawled}</div>
+                <div className={`text-4xl font-extrabold mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>{website.pages_crawled}</div>
                 <div className="text-gray-500 text-sm">Pages Crawled</div>
               </div>
-              <div className="bg-gray-900/40 border border-gray-800 hover:border-green-800/40 rounded-2xl p-6 text-center transition-all hover:shadow-[0_0_30px_rgba(34,197,94,0.07)] hover:-translate-y-0.5">
+              <div className={`rounded-2xl p-6 text-center transition-all hover:shadow-lg hover:-translate-y-0.5 border ${
+                dark ? 'bg-gray-900/40 border-gray-800 hover:border-green-800/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.07)]' : 'bg-white border-gray-200 hover:border-green-300 hover:shadow-md'
+              }`}>
                 <div className="flex justify-center mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-green-950/60 border border-green-800/40 flex items-center justify-center">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${dark ? 'bg-green-950/60 border border-green-800/40' : 'bg-green-50 border border-green-200'}`}>
                     <DocumentIcon />
                   </div>
                 </div>
-                <div className="text-4xl font-extrabold text-white mb-1">{chunks.length}</div>
+                <div className={`text-4xl font-extrabold mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>{chunks.length}</div>
                 <div className="text-gray-500 text-sm">Content Chunks</div>
               </div>
-              <div className="bg-gray-900/40 border border-gray-800 hover:border-purple-800/40 rounded-2xl p-6 text-center transition-all hover:shadow-[0_0_30px_rgba(168,85,247,0.07)] hover:-translate-y-0.5">
+              <div className={`rounded-2xl p-6 text-center transition-all hover:shadow-lg hover:-translate-y-0.5 border ${
+                dark ? 'bg-gray-900/40 border-gray-800 hover:border-purple-800/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.07)]' : 'bg-white border-gray-200 hover:border-purple-300 hover:shadow-md'
+              }`}>
                 <div className="flex justify-center mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-purple-950/60 border border-purple-800/40 flex items-center justify-center">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${dark ? 'bg-purple-950/60 border border-purple-800/40' : 'bg-purple-50 border border-purple-200'}`}>
                     <StatusIcon />
                   </div>
                 </div>
-                <div className="text-4xl font-extrabold text-white mb-1 capitalize">{website.status}</div>
+                <div className={`text-4xl font-extrabold mb-1 capitalize ${dark ? 'text-white' : 'text-gray-900'}`}>{website.status}</div>
                 <div className="text-gray-500 text-sm">Current Status</div>
               </div>
             </div>
 
             {/* Pages List */}
-            <div className="bg-gray-900/40 border border-gray-800 rounded-3xl p-8 hover:border-gray-700 transition-colors">
+            <div className={`rounded-3xl p-8 border transition-colors ${
+              dark ? 'bg-gray-900/40 border-gray-800 hover:border-gray-700' : 'bg-white border-gray-200 hover:border-gray-300'
+            }`}>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-blue-950/60 border border-blue-800/40 flex items-center justify-center">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${dark ? 'bg-blue-950/60 border border-blue-800/40' : 'bg-blue-50 border border-blue-200'}`}>
                   <PageIcon />
                 </div>
-                <h3 className="font-semibold text-lg">Crawled Pages</h3>
-                <span className="px-2.5 py-1 bg-gray-800 rounded-full text-xs text-gray-400">
+                <h3 className={`font-semibold text-lg ${dark ? 'text-white' : 'text-gray-900'}`}>Crawled Pages</h3>
+                <span className={`px-2.5 py-1 rounded-full text-xs ${dark ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
                   {[...new Set(chunks.map(c => c.source_url))].length} total
                 </span>
               </div>
               <div className="space-y-1 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                 {[...new Set(chunks.map(c => c.source_url))].map(url => (
-                  <div key={url} className="group flex items-center justify-between py-3 px-4 rounded-xl hover:bg-gray-800/50 transition-colors">
+                  <div key={url} className={`group flex items-center justify-between py-3 px-4 rounded-xl transition-colors ${
+                    dark ? 'hover:bg-gray-800/50' : 'hover:bg-gray-50'
+                  }`}>
                     <a href={url} target="_blank" rel="noreferrer"
-                      className="text-blue-400 hover:text-blue-300 text-sm truncate max-w-lg flex items-center gap-2 transition-colors">
+                      className={`text-sm truncate max-w-lg flex items-center gap-2 transition-colors ${dark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
                       <PageIcon />
                       <span className="truncate">{url}</span>
                       <span className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                         <ExternalLinkIcon />
                       </span>
                     </a>
-                    <span className="text-gray-600 text-xs flex items-center gap-1.5 flex-shrink-0">
+                    <span className={`text-xs flex items-center gap-1.5 flex-shrink-0 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
                       <ChunkIcon />
                       {chunks.filter(c => c.source_url === url).length} chunks
                     </span>
@@ -424,13 +464,15 @@ export default function WebsiteDetail() {
                 placeholder="Search chunks by content or URL..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                className="w-full bg-gray-900/40 border border-gray-800 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 transition-all"
+                className={`w-full rounded-xl pl-12 pr-4 py-4 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 transition-all border ${
+                  dark ? 'bg-gray-900/40 border-gray-800 text-white focus:border-blue-500 focus:ring-blue-500/20' : 'bg-white border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500/20'
+                }`}
               />
             </div>
 
             {/* Results count */}
             {search && (
-              <div className="text-gray-500 text-sm flex items-center gap-2">
+              <div className={`text-sm flex items-center gap-2 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
                 <SearchIcon />
                 {filteredChunks.length} result{filteredChunks.length !== 1 ? 's' : ''} for "{search}"
               </div>
@@ -439,31 +481,33 @@ export default function WebsiteDetail() {
             {/* Chunks List */}
             <div className="space-y-4">
               {paginatedChunks.map((chunk) => (
-                <div key={chunk.id} className="group bg-gray-900/40 border border-gray-800 hover:border-blue-800/40 rounded-2xl p-6 transition-all hover:shadow-[0_0_30px_rgba(59,130,246,0.05)]">
+                <div key={chunk.id} className={`group rounded-2xl p-6 border transition-all ${
+                  dark ? 'bg-gray-900/40 border-gray-800 hover:border-blue-800/40 hover:shadow-[0_0_30px_rgba(59,130,246,0.05)]' : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
+                }`}>
                   <div className="flex items-center justify-between mb-4">
                     <a href={chunk.source_url} target="_blank" rel="noreferrer"
-                      className="text-blue-400 hover:text-blue-300 text-xs truncate max-w-lg flex items-center gap-2 transition-colors">
+                      className={`text-xs truncate max-w-lg flex items-center gap-2 transition-colors ${dark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
                       <PageIcon />
                       <span className="truncate">{chunk.source_url}</span>
                       <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                         <ExternalLinkIcon />
                       </span>
                     </a>
-                    <span className="text-gray-600 text-xs flex items-center gap-1.5 flex-shrink-0 px-2.5 py-1 bg-gray-950 rounded-full border border-gray-800">
+                    <span className={`text-xs flex items-center gap-1.5 flex-shrink-0 px-2.5 py-1 rounded-full border ${dark ? 'bg-gray-950 border-gray-800 text-gray-400' : 'bg-gray-100 border-gray-200 text-gray-500'}`}>
                       <ChunkIcon />
                       Chunk #{chunk.chunk_index + 1}
                     </span>
                   </div>
-                  <p className="text-gray-300 text-sm leading-relaxed">{chunk.content}</p>
+                  <p className={`text-sm leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{chunk.content}</p>
                   {chunk.metadata && (
-                    <div className="mt-4 flex items-center gap-4 text-xs text-gray-500">
+                    <div className="mt-4 flex items-center gap-4 text-xs">
                       {chunk.metadata.title && (
-                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-950 rounded-lg border border-gray-800">
+                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${dark ? 'bg-gray-950 border-gray-800 text-gray-500' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
                           <PageIcon /> {chunk.metadata.title}
                         </span>
                       )}
                       {chunk.metadata.word_count && (
-                        <span className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-950 rounded-lg border border-gray-800">
+                        <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${dark ? 'bg-gray-950 border-gray-800 text-gray-500' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
                           <WordIcon /> {chunk.metadata.word_count} words
                         </span>
                       )}
@@ -475,12 +519,12 @@ export default function WebsiteDetail() {
 
             {/* Empty State */}
             {paginatedChunks.length === 0 && (
-              <div className="text-center py-16 border-2 border-dashed border-gray-800 rounded-3xl bg-gray-900/20">
+              <div className={`text-center py-16 border-2 border-dashed rounded-3xl ${dark ? 'border-gray-800 bg-gray-900/20' : 'border-gray-200 bg-white'}`}>
                 <div className="flex justify-center mb-4">
                   <SearchIcon />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">No chunks found</h3>
-                <p className="text-gray-500 text-sm">Try adjusting your search query</p>
+                <h3 className={`text-lg font-semibold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>No chunks found</h3>
+                <p className={`text-sm ${dark ? 'text-gray-500' : 'text-gray-400'}`}>Try adjusting your search query</p>
               </div>
             )}
 
@@ -489,7 +533,9 @@ export default function WebsiteDetail() {
               <div className="flex items-center justify-center gap-3 mt-8">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="flex items-center gap-1 px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm disabled:opacity-40 hover:bg-gray-800 transition-all">
+                  className={`flex items-center gap-1 px-4 py-2.5 border rounded-xl text-sm disabled:opacity-40 transition-all ${
+                    dark ? 'bg-gray-900 border-gray-800 hover:bg-gray-800' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+                  }`}>
                   <ChevronLeftIcon /> Prev
                 </button>
                 <div className="flex items-center gap-1">
@@ -499,7 +545,7 @@ export default function WebsiteDetail() {
                       className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                         page === i + 1
                           ? 'bg-blue-600 text-white'
-                          : 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800'
+                          : dark ? 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
                       }`}>
                       {i + 1}
                     </button>
@@ -507,7 +553,9 @@ export default function WebsiteDetail() {
                 </div>
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="flex items-center gap-1 px-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm disabled:opacity-40 hover:bg-gray-800 transition-all">
+                  className={`flex items-center gap-1 px-4 py-2.5 border rounded-xl text-sm disabled:opacity-40 transition-all ${
+                    dark ? 'bg-gray-900 border-gray-800 hover:bg-gray-800' : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+                  }`}>
                   Next <ChevronRightIcon />
                 </button>
               </div>
