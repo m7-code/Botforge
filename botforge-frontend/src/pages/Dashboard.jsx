@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { getWebsites, addWebsite, deleteWebsite, recrawlWebsite, getMe } from '../services/api';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -17,22 +17,18 @@ const BotIcon = () => (
   </svg>
 );
 
-const GlobeIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+const GlobeIcon = ({ className = "w-4 h-4" }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
     <ellipse cx="12" cy="12" rx="4" ry="9" stroke="currentColor" strokeWidth="1.5"/>
     <path d="M3 12H21" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M3.5 8H20.5M3.5 16H20.5" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
   </svg>
 );
 
 const ChipIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M9 3V7M12 3V7M15 3V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M9 17V21M12 17V21M15 17V21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M3 9H7M3 12H7M3 15H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M17 9H21M17 12H21M17 15H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M9 3V7M12 3V7M15 3V7M9 17V21M12 17V21M15 17V21M3 9H7M3 12H7M3 15H7M17 9H21M17 12H21M17 15H21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
@@ -104,21 +100,32 @@ const MoonIcon = () => (
   </svg>
 );
 
+const HomeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M3 12L5 10M5 10L12 3L19 10M5 10V20C5 20.5523 5.44772 21 6 21H9M19 10L21 12M19 10V20C19 20.5523 18.5523 21 18 21H15M9 21C9 21 9 15 12 15C15 15 15 21 15 21M9 21H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const ChevronIcon = ({ open }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`}>
+    <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // ─── Status Config ─────────────────────────────────────────────────────────────
 
 const STATUS = {
-  pending:  { dot: 'bg-amber-400',  badge: 'bg-amber-50 text-amber-700 border-amber-200',    label: 'Pending'  },
-  crawling: { dot: 'bg-blue-500',   badge: 'bg-blue-50 text-blue-700 border-blue-200',        label: 'Crawling' },
-  ready:    { dot: 'bg-emerald-500',badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',label: 'Ready'   },
-  failed:   { dot: 'bg-red-500',    badge: 'bg-red-50 text-red-700 border-red-200',            label: 'Failed'  },
+  pending:  { dot: 'bg-amber-400',   badge: 'bg-amber-50 text-amber-700 border-amber-200',     label: 'Pending'  },
+  crawling: { dot: 'bg-blue-500',    badge: 'bg-blue-50 text-blue-700 border-blue-200',         label: 'Crawling' },
+  ready:    { dot: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',label: 'Ready'   },
+  failed:   { dot: 'bg-red-500',     badge: 'bg-red-50 text-red-700 border-red-200',             label: 'Failed'  },
 };
 
-// Dark‑mode adjustments for status badges
 const STATUS_DARK = {
-  pending:  { dot: 'bg-amber-400',  badge: 'bg-amber-400/10 text-amber-300 border-amber-500/20',    label: 'Pending'  },
-  crawling: { dot: 'bg-blue-400',   badge: 'bg-blue-400/10 text-blue-300 border-blue-500/20',        label: 'Crawling' },
-  ready:    { dot: 'bg-emerald-400',badge: 'bg-emerald-400/10 text-emerald-300 border-emerald-500/20',label: 'Ready'   },
-  failed:   { dot: 'bg-red-400',    badge: 'bg-red-400/10 text-red-300 border-red-500/20',            label: 'Failed'  },
+  pending:  { dot: 'bg-amber-400',   badge: 'bg-amber-400/10 text-amber-300 border-amber-500/20',     label: 'Pending'  },
+  crawling: { dot: 'bg-blue-400',    badge: 'bg-blue-400/10 text-blue-300 border-blue-500/20',         label: 'Crawling' },
+  ready:    { dot: 'bg-emerald-400', badge: 'bg-emerald-400/10 text-emerald-300 border-emerald-500/20',label: 'Ready'   },
+  failed:   { dot: 'bg-red-400',     badge: 'bg-red-400/10 text-red-300 border-red-500/20',             label: 'Failed'  },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -126,13 +133,14 @@ const STATUS_DARK = {
 export default function Dashboard() {
   const navigate = useNavigate();
   const [websites, setWebsites] = useState([]);
-  const [user, setUser]     = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showAdd, setShowAdd] = useState(false);
-  const [newUrl, setNewUrl]   = useState('');
-  const [adding, setAdding]   = useState(false);
-  const [error, setError]     = useState('');
-  const [dark, setDark]       = useState(false); // theme state
+  const [user, setUser]         = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [showAdd, setShowAdd]   = useState(false);
+  const [newUrl, setNewUrl]     = useState('');
+  const [adding, setAdding]     = useState(false);
+  const [error, setError]       = useState('');
+  const [dark, setDark]         = useState(true); // theme state
+  const [sitesOpen, setSitesOpen] = useState(true);
 
   useEffect(() => { fetchData(); }, []);
 
@@ -181,10 +189,10 @@ export default function Dashboard() {
   };
 
   if (loading) return (
-    <div className={`min-h-screen flex items-center justify-center transition-colors ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
+    <div className={`min-h-screen flex items-center justify-center ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"/>
-        <span className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Loading workspace...</span>
+        <span className="text-sm font-medium text-gray-400">Loading workspace...</span>
       </div>
     </div>
   );
@@ -192,241 +200,264 @@ export default function Dashboard() {
   const totalPages = websites.reduce((a, w) => a + (w.pages_crawled || 0), 0);
   const activeBots = websites.filter(w => w.status === 'ready').length;
 
-  return (
-    <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-white' : 'bg-[#f8f9ff] text-gray-900'}`} style={{ fontFamily: "'Inter', sans-serif" }}>
+  const d = {
+    bg:        dark ? 'bg-gray-950' : 'bg-[#f8f9ff]',
+    sidebar:   dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    header:    dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    text:      dark ? 'text-white' : 'text-gray-900',
+    subtext:   dark ? 'text-gray-400' : 'text-gray-500',
+    card:      dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    hover:     dark ? 'hover:bg-gray-800' : 'hover:bg-gray-50',
+    input:     dark ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-900',
+    divider:   dark ? 'border-gray-800' : 'border-gray-100',
+  };
 
-      {/* ── Navbar ── */}
-      <header className={`border-b sticky top-0 z-50 transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
-        <nav className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto">
+  return (
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${d.bg}`} style={{ fontFamily: "'Inter', sans-serif" }}>
+
+      {/* ── Top Navbar ── */}
+      <header className={`border-b sticky top-0 z-50 ${d.header}`}>
+        <nav className="flex items-center justify-between px-6 py-3.5">
           <div className="flex items-center gap-2">
             <BotIcon />
-            <span className={`font-bold text-lg tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
+            <span className={`font-bold text-lg tracking-tight ${d.text}`}>BotForge</span>
           </div>
-
           <div className="flex items-center gap-3">
-            {/* Theme toggle */}
-            <button
-              onClick={() => setDark(!dark)}
-              className={`p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Toggle dark mode"
-            >
+            <button onClick={() => setDark(!dark)}
+              className={`p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}>
               {dark ? <SunIcon /> : <MoonIcon />}
             </button>
-
             {user?.is_admin && (
               <Link to="/admin"
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition">
-                <ShieldIcon /> Admin Panel
+                <ShieldIcon /> Admin
               </Link>
             )}
-            <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg transition-colors ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+            <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
               <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
-              <span className={`text-sm font-medium ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{user?.name}</span>
-              <span className="px-1.5 py-0.5 text-xs font-semibold bg-blue-600 text-white rounded capitalize">
-                {user?.plan}
-              </span>
+              <span className={`text-sm font-medium hidden sm:block ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{user?.name}</span>
+              <span className="px-1.5 py-0.5 text-xs font-semibold bg-blue-600 text-white rounded capitalize">{user?.plan}</span>
             </div>
             <button onClick={handleLogout}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg transition ${dark ? 'text-gray-400 border-gray-700 hover:text-gray-200 hover:bg-gray-800' : 'text-gray-500 border-gray-200 hover:text-gray-900 hover:bg-gray-50'}`}>
-              <LogoutIcon /> Logout
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded-lg transition ${dark ? 'text-gray-400 border-gray-700 hover:bg-gray-800' : 'text-gray-500 border-gray-200 hover:bg-gray-50'}`}>
+              <LogoutIcon />
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 py-8">
+      {/* ── Body (Sidebar + Main) ── */}
+      <div className="flex flex-1">
 
-        {/* ── Page Header ── */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className={`text-2xl font-bold mb-1 ${dark ? 'text-white' : 'text-gray-900'}`}>My Websites</h1>
-            <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{websites.length} site{websites.length !== 1 ? 's' : ''} in your workspace</p>
+        {/* ── Sidebar ── */}
+        <aside className={`w-64 flex-shrink-0 border-r flex flex-col sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto ${d.sidebar}`}>
+
+          {/* Nav */}
+          <div className="p-4 flex-1">
+
+            {/* Dashboard link */}
+            <div className="mb-2">
+              <Link to="/dashboard"
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition ${dark ? 'bg-blue-500/10 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                <HomeIcon /> Dashboard
+              </Link>
+            </div>
+
+            {/* Websites section */}
+            <div className="mb-1">
+              <button
+                onClick={() => setSitesOpen(!sitesOpen)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition ${dark ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-800' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'}`}>
+                <span>Websites</span>
+                <ChevronIcon open={sitesOpen} />
+              </button>
+            </div>
+
+            {sitesOpen && (
+              <div className="space-y-0.5 mb-4">
+                {websites.length === 0 ? (
+                  <p className={`text-xs px-3 py-2 ${d.subtext}`}>No websites yet</p>
+                ) : (
+                  websites.map((site) => {
+                    const st = dark ? STATUS_DARK[site.status] : STATUS[site.status];
+                    return (
+                      <Link key={site.id} to={`/websites/${site.id}`}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition group ${dark ? 'hover:bg-gray-800' : 'hover:bg-gray-50'}`}>
+                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${st?.dot || 'bg-gray-400'} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
+                        <span className={`truncate text-xs ${dark ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>
+                          {site.name || site.url}
+                        </span>
+                      </Link>
+                    );
+                  })
+                )}
+
+                {/* Add website shortcut */}
+                <button
+                  onClick={() => setShowAdd(true)}
+                  className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition ${dark ? 'text-gray-500 hover:text-blue-400 hover:bg-gray-800' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}>
+                  <PlusIcon /> Add website
+                </button>
+              </div>
+            )}
+
+            {/* Divider */}
+            <div className={`border-t my-3 ${d.divider}`}/>
+
+            {/* Admin link if admin */}
+            {user?.is_admin && (
+              <Link to="/admin"
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition ${dark ? 'text-red-400 hover:bg-red-400/10' : 'text-red-600 hover:bg-red-50'}`}>
+                <ShieldIcon /> Admin Panel
+              </Link>
+            )}
           </div>
-          <button onClick={() => setShowAdd(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition active:scale-95">
-            <PlusIcon /> Add Website
-          </button>
-        </div>
 
-        {/* ── Stats Bento ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          {[
-            { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon,  color: 'text-blue-600',    bg: 'bg-blue-50',   darkBg: 'bg-blue-400/10', darkColor: 'text-blue-400' },
-            { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,   color: 'text-emerald-600', bg: 'bg-emerald-50', darkBg: 'bg-emerald-400/10', darkColor: 'text-emerald-400' },
-            { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,    color: 'text-violet-600',  bg: 'bg-violet-50', darkBg: 'bg-violet-400/10', darkColor: 'text-violet-400' },
-          ].map(({ label, value, Icon, color, bg, darkBg, darkColor }) => (
-            <div key={label} className={`rounded-xl p-5 flex items-center gap-4 border transition-colors ${
-              dark ? `bg-gray-900 border-gray-800 hover:border-blue-800` : `bg-white border-gray-200 hover:border-blue-200`
-            }`}>
-              <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${dark ? darkBg + ' ' + darkColor : bg + ' ' + color}`}>
-                <Icon />
+          {/* User card at bottom */}
+          <div className={`p-4 border-t ${d.divider}`}>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {user?.name?.charAt(0).toUpperCase()}
               </div>
-              <div>
-                <div className={`text-2xl font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>{value}</div>
-                <div className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{label}</div>
+              <div className="min-w-0 flex-1">
+                <div className={`text-sm font-medium truncate ${d.text}`}>{user?.name}</div>
+                <div className={`text-xs truncate ${d.subtext}`}>{user?.email}</div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        </aside>
 
-        {/* ── Websites List ── */}
-        {websites.length === 0 ? (
+        {/* ── Main Content ── */}
+        <main className="flex-1 min-w-0 p-8">
 
-          <div className={`border-2 border-dashed rounded-2xl p-16 text-center transition-colors ${
-            dark ? 'border-gray-800 bg-gray-900/40' : 'border-gray-200 bg-white'
-          }`}>
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
-              dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'
-            }`}>
-              <GlobeIcon />
+          {/* Header */}
+          <div className="flex items-start justify-between mb-8">
+            <div>
+              <h1 className={`text-2xl font-bold mb-1 ${d.text}`}>My Websites</h1>
+              <p className={`text-sm ${d.subtext}`}>{websites.length} site{websites.length !== 1 ? 's' : ''} in your workspace</p>
             </div>
-            <h3 className={`font-semibold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>No websites yet</h3>
-            <p className={`text-sm mb-6 max-w-xs mx-auto ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
-              Add your first website and our AI will crawl it and build a smart chatbot knowledge base.
-            </p>
             <button onClick={() => setShowAdd(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
-              <PlusIcon /> Add Your First Website
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition active:scale-95">
+              <PlusIcon /> Add Website
             </button>
           </div>
 
-        ) : (
-          <div className={`border rounded-2xl overflow-hidden transition-colors ${
-            dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'
-          }`}>
-
-            {/* Table Header */}
-            <div className={`grid grid-cols-12 px-6 py-3 border-b ${
-              dark ? 'border-gray-800 bg-gray-950/50' : 'border-gray-100 bg-gray-50/50'
-            }`}>
-              <div className="col-span-5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Website</div>
-              <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</div>
-              <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Pages</div>
-              <div className="col-span-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</div>
-            </div>
-
-            {/* Rows */}
-            {websites.map((site, i) => {
-              const statusConfig = dark ? STATUS_DARK[site.status] || STATUS_DARK.pending : STATUS[site.status] || STATUS.pending;
-              return (
-                <Link to={`/websites/${site.id}`} key={site.id}
-                  className={`grid grid-cols-12 px-6 py-4 items-center transition-colors group ${
-                    dark ? 'hover:bg-blue-500/5' : 'hover:bg-blue-50/40'
-                  } ${i < websites.length - 1 ? (dark ? 'border-b border-gray-800' : 'border-b border-gray-100') : ''}`}>
-
-                  {/* Name + URL */}
-                  <div className="col-span-5 flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${statusConfig.dot} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
-                    <div className="min-w-0">
-                      <div className={`font-medium truncate transition-colors ${dark ? 'text-gray-200 group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'}`}>
-                        {site.name || site.url}
-                      </div>
-                      <div className={`text-xs truncate ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{site.url}</div>
-                    </div>
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className="col-span-2">
-                    <span className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border rounded-full ${statusConfig.badge}`}>
-                      {statusConfig.label}
-                    </span>
-                  </div>
-
-                  {/* Pages */}
-                  <div className={`col-span-2 text-sm font-medium ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    {site.pages_crawled} <span className={`font-normal ${dark ? 'text-gray-500' : 'text-gray-400'}`}>pages</span>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="col-span-3 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={(e) => handleRecrawl(e, site.id)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${
-                        dark ? 'text-gray-400 border-gray-700 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10' : 'text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-600 hover:bg-blue-50'
-                      }`}>
-                      <RefreshIcon /> Recrawl
-                    </button>
-                    <button
-                      onClick={(e) => handleDelete(e, site.id)}
-                      className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${
-                        dark ? 'text-red-400 border-red-400/20 hover:bg-red-400/10' : 'text-red-500 border-red-100 hover:bg-red-50'
-                      }`}>
-                      <TrashIcon />
-                    </button>
-                    <div className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-600">
-                      <ArrowRightIcon />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          {/* Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {[
+              { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon, darkColor: 'text-blue-400',    darkBg: 'bg-blue-400/10',    color: 'text-blue-600',    bg: 'bg-blue-50'   },
+              { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,  darkColor: 'text-emerald-400', darkBg: 'bg-emerald-400/10', color: 'text-emerald-600', bg: 'bg-emerald-50'},
+              { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,   darkColor: 'text-violet-400',  darkBg: 'bg-violet-400/10',  color: 'text-violet-600',  bg: 'bg-violet-50' },
+            ].map(({ label, value, Icon, color, bg, darkColor, darkBg }) => (
+              <div key={label} className={`rounded-xl p-5 flex items-center gap-4 border ${d.card}`}>
+                <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${dark ? darkBg + ' ' + darkColor : bg + ' ' + color}`}>
+                  <Icon />
+                </div>
+                <div>
+                  <div className={`text-2xl font-bold ${d.text}`}>{value}</div>
+                  <div className={`text-sm ${d.subtext}`}>{label}</div>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </main>
+
+          {/* Websites Table */}
+          {websites.length === 0 ? (
+            <div className={`border-2 border-dashed rounded-2xl p-16 text-center ${dark ? 'border-gray-800 bg-gray-900/40' : 'border-gray-200 bg-white'}`}>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                <GlobeIcon className="w-6 h-6" />
+              </div>
+              <h3 className={`font-semibold mb-2 ${d.text}`}>No websites yet</h3>
+              <p className={`text-sm mb-6 max-w-xs mx-auto ${d.subtext}`}>Add your first website and our AI will crawl it and build a smart chatbot knowledge base.</p>
+              <button onClick={() => setShowAdd(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
+                <PlusIcon /> Add Website
+              </button>
+            </div>
+          ) : (
+            <div className={`border rounded-2xl overflow-hidden ${d.card}`}>
+              <div className={`grid grid-cols-12 px-6 py-3 border-b ${d.divider} ${dark ? 'bg-gray-950/50' : 'bg-gray-50/50'}`}>
+                <div className="col-span-5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Website</div>
+                <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</div>
+                <div className="col-span-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Pages</div>
+                <div className="col-span-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</div>
+              </div>
+              {websites.map((site, i) => {
+                const st = dark ? STATUS_DARK[site.status] || STATUS_DARK.pending : STATUS[site.status] || STATUS.pending;
+                return (
+                  <Link to={`/websites/${site.id}`} key={site.id}
+                    className={`grid grid-cols-12 px-6 py-4 items-center transition-colors group ${dark ? 'hover:bg-blue-500/5' : 'hover:bg-blue-50/40'} ${i < websites.length - 1 ? `border-b ${d.divider}` : ''}`}>
+                    <div className="col-span-5 flex items-center gap-3">
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${st.dot} ${site.status === 'crawling' ? 'animate-pulse' : ''}`}/>
+                      <div className="min-w-0">
+                        <div className={`font-medium truncate transition-colors ${dark ? 'text-gray-200 group-hover:text-blue-400' : 'text-gray-900 group-hover:text-blue-600'}`}>{site.name || site.url}</div>
+                        <div className={`text-xs truncate ${d.subtext}`}>{site.url}</div>
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <span className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border rounded-full ${st.badge}`}>{st.label}</span>
+                    </div>
+                    <div className={`col-span-2 text-sm font-medium ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {site.pages_crawled} <span className={`font-normal ${d.subtext}`}>pages</span>
+                    </div>
+                    <div className="col-span-3 flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={(e) => handleRecrawl(e, site.id)}
+                        className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${dark ? 'text-gray-400 border-gray-700 hover:border-blue-500 hover:text-blue-400' : 'text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-600'}`}>
+                        <RefreshIcon /> Recrawl
+                      </button>
+                      <button onClick={(e) => handleDelete(e, site.id)}
+                        className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border rounded-lg transition ${dark ? 'text-red-400 border-red-400/20 hover:bg-red-400/10' : 'text-red-500 border-red-100 hover:bg-red-50'}`}>
+                        <TrashIcon />
+                      </button>
+                      <span className="text-blue-500"><ArrowRightIcon /></span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </main>
+      </div>
 
       {/* ── Add Modal ── */}
       {showAdd && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className={`rounded-2xl shadow-2xl w-full max-w-md border overflow-hidden transition-colors ${
-            dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'
-          }`}>
-
-            <div className={`flex items-center justify-between px-6 py-4 border-b ${
-              dark ? 'border-gray-800' : 'border-gray-100'
-            }`}>
+          <div className={`rounded-2xl shadow-2xl w-full max-w-md border overflow-hidden ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
+            <div className={`flex items-center justify-between px-6 py-4 border-b ${d.divider}`}>
               <div className="flex items-center gap-2.5">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'
-                }`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
                   <PlusIcon />
                 </div>
-                <h2 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>Add New Website</h2>
+                <h2 className={`font-semibold ${d.text}`}>Add New Website</h2>
               </div>
-              <button onClick={() => setShowAdd(false)} className={`transition ${dark ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}>
+              <button onClick={() => setShowAdd(false)} className={`${dark ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}>
                 <XIcon />
               </button>
             </div>
-
             <div className="p-6">
-              {error && (
-                <div className="flex items-center gap-2 bg-red-950/50 border border-red-800/60 text-red-300 px-4 py-3 rounded-lg mb-4 text-sm">
-                  {error}
-                </div>
-              )}
+              {error && <div className="text-red-400 text-sm bg-red-950/40 border border-red-800/40 px-4 py-3 rounded-lg mb-4">{error}</div>}
               <form onSubmit={handleAdd} className="space-y-4">
                 <div>
-                  <label className={`block text-sm font-medium mb-1.5 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>Website URL</label>
-                  <div className={`flex items-center gap-2 border rounded-lg px-3 focus-within:ring-2 focus-within:ring-blue-100 transition ${
-                    dark ? 'bg-gray-800 border-gray-700 focus-within:border-blue-500' : 'bg-gray-50 border-gray-200 focus-within:border-blue-400'
-                  }`}>
-                    <GlobeIcon />
-                    <input
-                      type="url"
-                      required
-                      placeholder="https://example.com"
-                      value={newUrl}
+                  <label className={`block text-sm font-medium mb-1.5 ${d.subtext}`}>Website URL</label>
+                  <div className={`flex items-center gap-2 border rounded-lg px-3 focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition ${d.input}`}>
+                    <GlobeIcon className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <input type="url" required placeholder="https://example.com" value={newUrl}
                       onChange={(e) => setNewUrl(e.target.value)}
-                      className={`flex-1 py-3 bg-transparent text-sm placeholder-gray-400 focus:outline-none ${dark ? 'text-white' : 'text-gray-900'}`}
-                    />
+                      className="flex-1 py-3 bg-transparent text-sm placeholder-gray-400 focus:outline-none"/>
                   </div>
-                  <p className={`text-xs mt-1.5 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>We'll crawl up to 100 pages automatically</p>
+                  <p className={`text-xs mt-1.5 ${d.subtext}`}>We'll crawl up to 100 pages automatically</p>
                 </div>
-                <div className="flex gap-3 pt-1">
+                <div className="flex gap-3">
                   <button type="button" onClick={() => setShowAdd(false)}
-                    className={`flex-1 py-2.5 text-sm font-medium border rounded-lg transition ${
-                      dark ? 'text-gray-400 border-gray-700 hover:bg-gray-800' : 'text-gray-600 border-gray-200 hover:bg-gray-50'
-                    }`}>
+                    className={`flex-1 py-2.5 text-sm font-medium border rounded-lg transition ${dark ? 'text-gray-400 border-gray-700 hover:bg-gray-800' : 'text-gray-600 border-gray-200 hover:bg-gray-50'}`}>
                     Cancel
                   </button>
                   <button type="submit" disabled={adding}
                     className="flex-1 py-2.5 text-sm font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center justify-center gap-2">
-                    {adding ? (
-                      <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/> Adding...</>
-                    ) : (
-                      <>Add Website <ArrowRightIcon /></>
-                    )}
+                    {adding ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"/> Adding...</> : <>Add Website <ArrowRightIcon /></>}
                   </button>
                 </div>
               </form>

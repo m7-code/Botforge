@@ -80,23 +80,32 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const [dark, setDark] = useState(false); // theme state
+  const [dark, setDark] = useState(true); // theme state
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      const res = await login(form);
-      localStorage.setItem('token', res.data.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.data.user));
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials');
-    } finally {
-      setLoading(false);
-    }
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  try {
+    const res = await login(form);
+    const user = res.data.data.user;
+
+    //  Ye line har qisam ki value ko sahi boolean mein badal degi
+    const isAdmin = [true, 'true', 1, '1'].includes(user.is_admin);
+
+    localStorage.setItem('token', res.data.data.token);
+    localStorage.setItem('user', JSON.stringify({
+      ...user,
+      is_admin: isAdmin,   // hamesha true ya false
+    }));
+
+    navigate(isAdmin ? '/admin' : '/dashboard');
+  } catch (err) {
+    setError(err.response?.data?.message || 'Invalid credentials');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div

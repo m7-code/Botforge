@@ -94,7 +94,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const [dark, setDark] = useState(false); // theme state
+  const [dark, setDark] = useState(true); // theme state
 
   const handleSubmit = async (e) => {
     e.preventDefault();

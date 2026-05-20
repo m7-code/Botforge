@@ -163,7 +163,7 @@ export default function WebsiteDetail() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [copied, setCopied] = useState(false);
-  const [dark, setDark] = useState(false); // theme state
+  const [dark, setDark] = useState(true); // theme state
   const perPage = 10;
 
   useEffect(() => {

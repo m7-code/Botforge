@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 
-// ─── Plan list (required for dropdowns) ──────────────────────────────────────
+// ─── Plan list for dropdowns ────────────────────────────────────
 const plans = ['free', 'starter', 'pro', 'agency'];
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
+// ─── Icons (using the same icon components as your Dashboard) ───
 const BotIcon = () => (
   <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
     <rect x="5" y="9" width="22" height="18" rx="6" fill="rgba(0,80,204,0.12)" stroke="#0050cc" strokeWidth="1.5"/>
@@ -33,13 +33,26 @@ const MoonIcon = () => (
 );
 
 const ShieldIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
     <path d="M12 2L4 6V12C4 16.4 7.4 20.5 12 22C16.6 20.5 20 16.4 20 12V6L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
     <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-// ─── Plan colour helper (theme‑aware) ────────────────────────────────────────
+const SearchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
+    <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
+
+const ArrowRightIcon = () => (
+  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+    <path d="M7 15L13 10L7 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// ─── Plan colour helper (theme‑aware) ────────────────────────────
 const getPlanClasses = (plan, dark) => {
   const map = {
     free:    dark ? 'bg-gray-800 text-gray-300 border-gray-700' : 'bg-gray-100 text-gray-700 border-gray-200',
@@ -50,7 +63,7 @@ const getPlanClasses = (plan, dark) => {
   return map[plan] || map.free;
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Component ────────────────────────────────────────────────────
 export default function AdminPanel() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -58,7 +71,8 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [updating, setUpdating] = useState(null);
-  const [dark, setDark] = useState(false); // theme state
+  const [dark, setDark] = useState(true); // theme state
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -72,10 +86,11 @@ export default function AdminPanel() {
       ]);
       setUsers(usersRes.data.data.users);
       setStats(statsRes.data.data);
-    } catch (err) {
-      if (err.response?.status === 403) {
-        navigate('/dashboard');
+      if (usersRes.data.data.users.length > 0 && !selectedUserId) {
+        setSelectedUserId(usersRes.data.data.users[0].id);
       }
+    } catch (err) {
+      if (err.response?.status === 403) navigate('/dashboard');
     } finally {
       setLoading(false);
     }
@@ -107,35 +122,54 @@ export default function AdminPanel() {
     if (!confirm('Delete this user permanently?')) return;
     try {
       await API.delete(`/admin/users/${userId}`);
-      setUsers(users.filter(u => u.id !== userId));
+      const updated = users.filter(u => u.id !== userId);
+      setUsers(updated);
+      if (selectedUserId === userId) {
+        setSelectedUserId(updated.length > 0 ? updated[0].id : null);
+      }
     } catch (err) {
       alert(err.response?.data?.message || 'Error');
     }
   };
 
-  const filtered = users.filter(u =>
+  const filteredUsers = users.filter(u =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||
     u.email.toLowerCase().includes(search.toLowerCase())
   );
 
+  const selectedUser = users.find(u => u.id === selectedUserId) || null;
+
+  // Theme helpers (same as Dashboard)
+  const d = {
+    bg:        dark ? 'bg-gray-950' : 'bg-[#f8f9ff]',
+    sidebar:   dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    header:    dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    text:      dark ? 'text-white' : 'text-gray-900',
+    subtext:   dark ? 'text-gray-400' : 'text-gray-500',
+    card:      dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200',
+    hover:     dark ? 'hover:bg-gray-800' : 'hover:bg-gray-50',
+    input:     dark ? 'bg-gray-800 border-gray-700 text-white' : 'bg-gray-50 border-gray-200 text-gray-900',
+    divider:   dark ? 'border-gray-800' : 'border-gray-100',
+  };
+
   if (loading) return (
-    <div className={`min-h-screen flex items-center justify-center transition-colors ${dark ? 'bg-gray-950' : 'bg-[#f8f9ff]'}`}>
+    <div className={`min-h-screen flex items-center justify-center transition-colors ${d.bg}`}>
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"/>
-        <span className={`text-sm font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Loading admin panel...</span>
+        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <span className={`text-sm font-medium ${d.subtext}`}>Loading admin panel...</span>
       </div>
     </div>
   );
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-950 text-white' : 'bg-[#f8f9ff] text-gray-900'}`} style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${d.bg}`} style={{ fontFamily: "'Inter', sans-serif" }}>
 
-      {/* ── Navbar ── */}
-      <header className={`border-b sticky top-0 z-50 transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
-        <nav className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto">
+      {/* ── Top Navbar (same style as Dashboard) ── */}
+      <header className={`border-b sticky top-0 z-50 ${d.header}`}>
+        <nav className="flex items-center justify-between px-6 py-3.5 max-w-full">
           <div className="flex items-center gap-3">
             <BotIcon />
-            <span className={`text-xl font-bold tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
+            <span className={`text-xl font-bold tracking-tight ${d.text}`}>BotForge</span>
             <span className="px-2 py-0.5 text-xs font-bold rounded bg-red-100 text-red-700 border border-red-200 dark:bg-red-400/10 dark:text-red-400 dark:border-red-500/20">
               ADMIN
             </span>
@@ -161,162 +195,205 @@ export default function AdminPanel() {
         </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto px-8 py-10">
+      {/* ── Body (Sidebar + Main) ── */}
+      <div className="flex flex-1">
 
-        {/* ── Stats Cards ── */}
-        {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            {[
-              { label: 'Total Users',         value: stats.totalUsers,         color: 'text-blue-600 dark:text-blue-400',         bg: 'bg-blue-50 dark:bg-blue-400/10' },
-              { label: 'Total Websites',       value: stats.totalWebsites,       color: 'text-emerald-600 dark:text-emerald-400',   bg: 'bg-emerald-50 dark:bg-emerald-400/10' },
-              { label: 'Total Conversations',  value: stats.totalConversations,  color: 'text-purple-600 dark:text-purple-400',     bg: 'bg-purple-50 dark:bg-purple-400/10' },
-              { label: 'Paid Users',           value: stats.planCounts?.filter(p => p.plan !== 'free').reduce((a, b) => a + b._count.plan, 0) || 0, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-400/10' },
-            ].map(s => (
-              <div key={s.label} className={`border rounded-2xl p-6 text-center transition-colors ${
-                dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'
-              }`}>
-                <div className={`text-3xl font-bold mb-1 ${s.color}`}>{s.value}</div>
-                <div className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{s.label}</div>
+        {/* ── Sidebar (same layout as Dashboard sidebar) ── */}
+        <aside className={`w-64 flex-shrink-0 border-r flex flex-col sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto ${d.sidebar}`}>
+
+          {/* Search */}
+          <div className="p-4 pb-2">
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <SearchIcon />
               </div>
-            ))}
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={`w-full border rounded-lg pl-9 pr-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 transition ${
+                  dark
+                    ? 'bg-gray-800 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500/20'
+                    : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500/20'
+                }`}
+              />
+            </div>
+            <div className="mt-2 text-xs text-gray-400">{filteredUsers.length} users</div>
           </div>
-        )}
 
-        {/* ── User Management Header ── */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className={`text-2xl font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>User Management</h1>
-          <span className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{filtered.length} users</span>
-        </div>
-
-        {/* ── Search ── */}
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={`w-full border rounded-xl px-4 py-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 transition mb-6 ${
-            dark
-              ? 'bg-gray-800 border-gray-700 text-white focus:border-blue-500 focus:ring-blue-500/20'
-              : 'bg-white border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500/20'
-          }`}
-        />
-
-        {/* ── Users Table ── */}
-        <div className={`border rounded-2xl overflow-hidden transition-colors ${
-          dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'
-        }`}>
-          <table className="w-full">
-            <thead>
-              <tr className={`border-b ${dark ? 'border-gray-800' : 'border-gray-100'} text-left`}>
-                {['User', 'Plan', 'Websites', 'Chats', 'Joined', 'Actions'].map(h => (
-                  <th key={h} className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((user) => (
-                <tr key={user.id} className={`border-b transition-colors ${
-                  dark ? 'border-gray-800/50 hover:bg-gray-800/30' : 'border-gray-100 hover:bg-blue-50/40'
-                }`}>
-
-                  {/* User info */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-full border flex items-center justify-center text-sm font-bold ${
-                        dark
-                          ? 'bg-blue-400/10 border-blue-500/20 text-blue-300'
-                          : 'bg-blue-50 border-blue-200 text-blue-700'
-                      }`}>
-                        {user.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm flex items-center gap-2">
-                          {user.name}
-                          {user.is_admin && (
-                            <span className="px-1.5 py-0.5 text-xs rounded bg-red-100 text-red-700 border border-red-200 dark:bg-red-400/10 dark:text-red-400 dark:border-red-500/20">
-                              ADMIN
-                            </span>
-                          )}
-                        </div>
-                        <div className={`text-xs ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{user.email}</div>
-                      </div>
+          {/* Users List */}
+          <div className="flex-1 space-y-0.5 px-3 pb-4">
+            {filteredUsers.length === 0 ? (
+              <p className={`text-xs px-3 py-2 ${d.subtext}`}>No users found</p>
+            ) : (
+              filteredUsers.map(user => (
+                <button
+                  key={user.id}
+                  onClick={() => setSelectedUserId(user.id)}
+                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition group ${
+                    selectedUserId === user.id
+                      ? dark
+                        ? 'bg-blue-500/10 text-blue-400'
+                        : 'bg-blue-50 text-blue-600'
+                      : dark
+                        ? 'hover:bg-gray-800 text-gray-300'
+                        : 'hover:bg-gray-50 text-gray-600'
+                  }`}
+                >
+                  {/* Avatar */}
+                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                    dark
+                      ? 'bg-blue-400/10 border-blue-500/20 text-blue-300'
+                      : 'bg-blue-50 border-blue-200 text-blue-700'
+                  }`}>
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-xs truncate">{user.name}</div>
+                    <div className={`text-[10px] truncate ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
+                      {user.email}
                     </div>
-                  </td>
-
-                  {/* Plan dropdown */}
-                  <td className="px-6 py-4">
-                    <select
-                      value={user.plan}
-                      onChange={(e) => changePlan(user.id, e.target.value)}
-                      disabled={updating === user.id}
-                      className={`text-xs font-bold px-3 py-1.5 rounded-lg border cursor-pointer capitalize focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 transition ${
-                        getPlanClasses(user.plan, dark)
-                      }`}
-                    >
-                      {plans.map(p => (
-                        <option key={p} value={p} className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white capitalize">{p}</option>
-                      ))}
-                    </select>
-                  </td>
-
-                  {/* Websites count */}
-                  <td className="px-6 py-4">
-                    <span className={`text-sm ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{user._count.websites}</span>
-                  </td>
-
-                  {/* Conversations */}
-                  <td className="px-6 py-4">
-                    <span className={`text-sm ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{user.monthly_conversations}</span>
-                  </td>
-
-                  {/* Joined date */}
-                  <td className="px-6 py-4">
-                    <span className={`text-xs ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </span>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => toggleAdmin(user.id, user.is_admin)}
-                        className={`px-2 py-1 text-xs rounded-lg border transition ${
-                          user.is_admin
-                            ? dark
-                              ? 'border-red-500/30 text-red-400 hover:bg-red-400/10'
-                              : 'border-red-200 text-red-600 hover:bg-red-50'
-                            : dark
-                              ? 'border-gray-700 text-gray-400 hover:bg-gray-700'
-                              : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        {user.is_admin ? 'Remove Admin' : 'Make Admin'}
-                      </button>
-                      <button
-                        onClick={() => deleteUser(user.id)}
-                        className={`px-2 py-1 text-xs border rounded-lg transition ${
-                          dark
-                            ? 'border-red-500/30 text-red-400 hover:bg-red-400/10'
-                            : 'border-red-200 text-red-500 hover:bg-red-50'
-                        }`}
-                      >
-                        Delete
-                      </button>
+                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize border ${getPlanClasses(user.plan, dark)}`}>
+                        {user.plan}
+                      </span>
+                      {user.is_admin && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 dark:bg-red-400/10 dark:text-red-400 dark:border-red-500/20">
+                          ADMIN
+                        </span>
+                      )}
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                  <ArrowRightIcon />
+                </button>
+              ))
+            )}
+          </div>
+
+          {/* Divider + Admin Panel link (if needed) */}
+          <div className={`p-4 border-t ${d.divider}`}>
+            <button onClick={() => navigate('/dashboard')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition ${dark ? 'text-gray-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-50'}`}>
+              <ShieldIcon /> Back to Dashboard
+            </button>
+          </div>
+        </aside>
+
+        {/* ── Main Content ── */}
+        <main className="flex-1 min-w-0 p-8">
+
+          {/* Stats Cards */}
+          {stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {[
+                { label: 'Total Users',         value: stats.totalUsers,         color: 'text-blue-600 dark:text-blue-400',         bg: 'bg-blue-50 dark:bg-blue-400/10' },
+                { label: 'Total Websites',       value: stats.totalWebsites,       color: 'text-emerald-600 dark:text-emerald-400',   bg: 'bg-emerald-50 dark:bg-emerald-400/10' },
+                { label: 'Total Conversations',  value: stats.totalConversations,  color: 'text-purple-600 dark:text-purple-400',     bg: 'bg-purple-50 dark:bg-purple-400/10' },
+                { label: 'Paid Users',           value: stats.planCounts?.filter(p => p.plan !== 'free').reduce((a, b) => a + b._count.plan, 0) || 0, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-400/10' },
+              ].map(s => (
+                <div key={s.label} className={`rounded-xl p-5 flex items-center gap-4 border ${d.card}`}>
+                  <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${dark ? s.bg.replace('50','400/10') : s.bg} ${s.color}`}>
+                    {/* Could use a relevant icon per stat */}
+                  </div>
+                  <div>
+                    <div className={`text-2xl font-bold ${d.text}`}>{s.value}</div>
+                    <div className={`text-sm ${d.subtext}`}>{s.label}</div>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
-
-          {filtered.length === 0 && (
-            <div className={`text-center py-12 text-sm ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
-              No users found
             </div>
           )}
-        </div>
-      </main>
+
+          {/* User Detail View */}
+          {!selectedUser ? (
+            <div className={`border-2 border-dashed rounded-2xl p-16 text-center ${dark ? 'border-gray-800 bg-gray-900/40' : 'border-gray-200 bg-white'}`}>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${dark ? 'bg-blue-400/10 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 20c0-4.418 3.582-8 8-8s8 3.582 8 8"/>
+                </svg>
+              </div>
+              <h3 className={`font-semibold mb-2 ${d.text}`}>Select a user</h3>
+              <p className={`text-sm max-w-xs mx-auto ${d.subtext}`}>Choose a user from the sidebar to view their details.</p>
+            </div>
+          ) : (
+            <div className={`border rounded-2xl overflow-hidden ${d.card}`}>
+              {/* User Header */}
+              <div className="p-6 border-b dark:border-gray-800 flex items-start justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-14 h-14 rounded-full border flex items-center justify-center text-xl font-bold ${
+                    dark ? 'bg-blue-400/10 border-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-700'
+                  }`}>
+                    {selectedUser.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold flex items-center gap-2">
+                      {selectedUser.name}
+                      {selectedUser.is_admin && (
+                        <span className="px-2 py-0.5 text-xs rounded bg-red-100 text-red-700 border border-red-200 dark:bg-red-400/10 dark:text-red-400 dark:border-red-500/20">
+                          ADMIN
+                        </span>
+                      )}
+                    </h2>
+                    <p className={`text-sm ${d.subtext}`}>{selectedUser.email}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => toggleAdmin(selectedUser.id, selectedUser.is_admin)}
+                    className={`px-3 py-1.5 text-xs rounded-lg border transition ${
+                      selectedUser.is_admin
+                        ? dark ? 'border-red-500/30 text-red-400 hover:bg-red-400/10' : 'border-red-200 text-red-600 hover:bg-red-50'
+                        : dark ? 'border-gray-700 text-gray-400 hover:bg-gray-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                    }`}>
+                    {selectedUser.is_admin ? 'Remove Admin' : 'Make Admin'}
+                  </button>
+                  <button onClick={() => deleteUser(selectedUser.id)}
+                    className={`px-3 py-1.5 text-xs border rounded-lg transition ${
+                      dark ? 'border-red-500/30 text-red-400 hover:bg-red-400/10' : 'border-red-200 text-red-500 hover:bg-red-50'
+                    }`}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              {/* Detail Cards */}
+              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className={`p-5 rounded-xl border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Plan</div>
+                  <select
+                    value={selectedUser.plan}
+                    onChange={(e) => changePlan(selectedUser.id, e.target.value)}
+                    disabled={updating === selectedUser.id}
+                    className={`text-sm font-bold px-3 py-1.5 rounded-lg border cursor-pointer capitalize focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 transition ${getPlanClasses(selectedUser.plan, dark)}`}
+                  >
+                    {plans.map(p => (
+                      <option key={p} value={p} className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white capitalize">{p}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={`p-5 rounded-xl border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Websites</div>
+                  <div className="text-2xl font-bold">{selectedUser._count?.websites ?? 0}</div>
+                </div>
+
+                <div className={`p-5 rounded-xl border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Monthly Chats</div>
+                  <div className="text-2xl font-bold">{selectedUser.monthly_conversations ?? 0}</div>
+                </div>
+
+                <div className={`p-5 rounded-xl border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Joined</div>
+                  <div className={`text-sm ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {new Date(selectedUser.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

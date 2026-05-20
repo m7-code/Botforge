@@ -60,7 +60,7 @@ const MoonIcon = () => (
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
-  const [dark, setDark] = useState(false); // theme state
+  const [dark, setDark] = useState(true); // theme state
 
   const handleSubmit = (e) => {
     e.preventDefault();

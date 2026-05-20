@@ -120,7 +120,7 @@ const plans = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LandingPage() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
 
   useEffect(() => {
     if (dark) {
