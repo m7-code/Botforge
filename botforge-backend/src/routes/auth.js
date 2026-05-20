@@ -98,7 +98,13 @@ router.post('/login', authLimiter, async (req, res) => {
       message: 'Login successful',
       data: { 
         token, 
-        user: { id: user.id, name: user.name, email: user.email, plan: user.plan } 
+        user: { 
+          id: user.id, 
+          name: user.name, 
+          email: user.email, 
+          plan: user.plan, 
+          is_admin: user.is_admin   
+        } 
       },
     });
   } catch (err) {
@@ -108,7 +114,6 @@ router.post('/login', authLimiter, async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
-
 //Logout
 router.post('/logout', (req, res) => {
   return res.json({ success: true, message: 'Logged out successfully' });
