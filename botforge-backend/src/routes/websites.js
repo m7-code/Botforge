@@ -2,6 +2,7 @@ import express from 'express';
 import { z } from 'zod';
 import prisma from '../lib/prisma.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { checkPlanLimits } from '../middleware/planLimits.js';
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // POST /api/v1/websites
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, checkPlanLimits, async (req, res) => {
   try {
     const { url, name } = websiteSchema.parse(req.body);
 

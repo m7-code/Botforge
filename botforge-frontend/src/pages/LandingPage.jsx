@@ -50,13 +50,35 @@ const ShieldIcon = () => (
 );
 
 const SpeedIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-600">
-    <path d="M10 3C6.13 3 3 6.13 3 10H17C17 6.13 13.87 3 10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M10 10L13 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-600">
+    {/* Poora outer circle */}
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+    
+    {/* Speed arc (bottom left se bottom right) */}
+    <path 
+      d="M4 12 A8 8 0 0 1 20 12" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round"
+    />
+    
+    {/* Ticks */}
+    <path d="M6.5 15 L7.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M12 16 L12 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M17.5 15 L16.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    
+    {/* Needle */}
+    <path 
+      d="M12 12 L15 9" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round"
+    />
+    
+    {/* Center dot */}
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
   </svg>
 );
-
 const StarIcon = () => (
   <svg viewBox="0 0 20 20" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <path d="M10 2L12.4 7.5H18L13.5 11.3L15.5 17L10 13.5L4.5 17L6.5 11.3L2 7.5H7.6L10 2Z"/>
@@ -137,7 +159,8 @@ export default function LandingPage() {
       <header className={`w-full top-0 sticky z-50 border-b transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
         <nav className="flex justify-between items-center px-8 py-4 max-w-full mx-auto">
           <div className="flex items-center gap-2">
-            <BotIcon />
+            {/* <BotIcon /> */}
+            <img class="h-8 w-8" src="public/logo.png" alt="BotForge Logo" />
             <span className={`font-bold text-xl tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
           </div>
           <div className={`hidden md:flex items-center gap-10 text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -186,10 +209,10 @@ export default function LandingPage() {
                   placeholder="https://your-website.com"
                   type="text"
                   readOnly
-                  onClick={() => window.location.href = '/register'}
+                  onClick={() => window.location.href = '/login'}
                 />
               </div>
-              <Link to="/register"
+              <Link to="/login"
                 className="bg-blue-600 text-white px-10 py-3 rounded-lg text-xs font-bold hover:bg-blue-700 transition active:scale-95 whitespace-nowrap uppercase tracking-wide">
                 Generate Bot
               </Link>

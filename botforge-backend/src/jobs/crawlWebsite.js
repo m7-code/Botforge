@@ -134,7 +134,7 @@ export async function crawlWebsite(websiteId) {
     for (const url of urls) {
       try {
         const { data: pageHtml } = await axios.get(url, {
-          timeout: 15000,
+          timeout: 30000,
           headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BotForge/1.0)' }
         });
         const $page = cheerio.load(pageHtml);
