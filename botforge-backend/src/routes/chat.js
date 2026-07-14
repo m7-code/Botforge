@@ -76,7 +76,44 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
     });
     if (!conversation) return res.status(404).json({ success: false, error: 'Conversation not found' });
 
-    // Keywords se chunks dhundo
+    // ───────── Plan & limit check (public chat) ─────────
+    const owner = await prisma.users.findUnique({
+      where: { id: website.userId },
+      select: { plan: true, monthly_conversations: true }
+    });
+
+    if (!owner) return res.status(500).json({ success: false, error: 'Owner not found' });
+
+    // 1. Free plan block
+    if (owner.plan === 'free') {
+      return res.status(403).json({
+        success: false,
+        error: 'Free plan is no longer available. Please upgrade to continue.'
+      });
+    }
+
+    // 2. Increment monthly counter
+    await prisma.users.update({
+      where: { id: website.userId },
+      data: { monthly_conversations: { increment: 1 } }
+    });
+
+    // 3. Limit check (after increment)
+    const limits = { free: 0, starter: 5000, pro: 25000, agency: Infinity };
+    const limit = limits[owner.plan] ?? 0;
+    const updatedUser = await prisma.users.findUnique({
+      where: { id: website.userId },
+      select: { monthly_conversations: true }
+    });
+
+    if (updatedUser.monthly_conversations > limit && limit !== Infinity) {
+      return res.status(429).json({
+        success: false,
+        error: `Monthly conversation limit reached. Your plan allows ${limit} messages. Please upgrade.`
+      });
+    }
+
+    // ───────── Keyword search for chunks ─────────
     const keywords = message.toLowerCase().split(' ')
       .filter(w => w.length > 3)
       .slice(0, 5);
@@ -116,7 +153,7 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
-    // Agar key nahi hai — Demo mode
+    // ───────── Demo mode (no API key) ─────────
     if (!AI_KEY || AI_KEY === 'your-key-here') {
       const demoResponse = chunks.length > 0
         ? `Based on our website: ${chunks[0].content.slice(0, 200)}...`
@@ -134,8 +171,7 @@ router.post('/:bot_id/message', chatLimiter, async (req, res) => {
       return;
     }
 
-    // Real AI Streaming
-    
+    // ───────── Real AI Streaming ─────────
     const systemPrompt = `You are ${botName}, a helpful AI assistant for ${website.name}.
 Tone: ${tone}.
 
