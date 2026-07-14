@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
-
 const BotIcon = () => (
   <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
     <rect x="5" y="9" width="22" height="18" rx="6" fill="rgba(0,80,204,0.12)" stroke="#0050cc" strokeWidth="1.5"/>
@@ -51,34 +50,16 @@ const ShieldIcon = () => (
 
 const SpeedIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-blue-600">
-    {/* Poora outer circle */}
     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-    
-    {/* Speed arc (bottom left se bottom right) */}
-    <path 
-      d="M4 12 A8 8 0 0 1 20 12" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round"
-    />
-    
-    {/* Ticks */}
+    <path d="M4 12 A8 8 0 0 1 20 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
     <path d="M6.5 15 L7.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     <path d="M12 16 L12 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
     <path d="M17.5 15 L16.5 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    
-    {/* Needle */}
-    <path 
-      d="M12 12 L15 9" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round"
-    />
-    
-    {/* Center dot */}
+    <path d="M12 12 L15 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
     <circle cx="12" cy="12" r="1.5" fill="currentColor" />
   </svg>
 );
+
 const StarIcon = () => (
   <svg viewBox="0 0 20 20" fill="#F59E0B" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
     <path d="M10 2L12.4 7.5H18L13.5 11.3L15.5 17L10 13.5L4.5 17L6.5 11.3L2 7.5H7.6L10 2Z"/>
@@ -123,24 +104,14 @@ const HubIcon = () => (
   </svg>
 );
 
-const LinkIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400">
-    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-// ─── Plans ────────────────────────────────────────────────────────────────────
-
+// ─── Plans (Free plan hata diya gaya) ────────────────────────────────────────
 const plans = [
-  { plan: 'Free',    price: '$0',   convos: '500',       websites: '1',  popular: false },
   { plan: 'Starter', price: '$29',  convos: '5,000',     websites: '3',  popular: false },
   { plan: 'Pro',     price: '$79',  convos: '25,000',    websites: '10', popular: true  },
   { plan: 'Agency',  price: '$199', convos: 'Unlimited', websites: '∞',  popular: false },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
-
 export default function LandingPage() {
   const [dark, setDark] = useState(true);
 
@@ -159,8 +130,7 @@ export default function LandingPage() {
       <header className={`w-full top-0 sticky z-50 border-b transition-colors ${dark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'}`}>
         <nav className="flex justify-between items-center px-8 py-4 max-w-full mx-auto">
           <div className="flex items-center gap-2">
-            {/* <BotIcon /> */}
-            <img class="h-8 w-8" src="public/logo.png" alt="BotForge Logo" />
+            <img className="h-8 w-8" src="public/logo.png" alt="BotForge Logo" />
             <span className={`font-bold text-xl tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>BotForge</span>
           </div>
           <div className={`hidden md:flex items-center gap-10 text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -169,7 +139,6 @@ export default function LandingPage() {
             <a href="#pricing" className="hover:text-blue-500 transition">Pricing</a>
           </div>
           <div className="flex items-center gap-3">
-            {/* Dark mode toggle */}
             <button
               onClick={() => setDark(!dark)}
               className={`p-2 rounded-full transition ${dark ? 'text-yellow-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
@@ -189,7 +158,7 @@ export default function LandingPage() {
 
       <main>
 
-        {/* ── Hero ── */}
+        {/* ── Hero (URL input + Generate Bot button hataye gaye) ── */}
         <section className="relative pt-16 pb-24 px-8 overflow-hidden">
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <h1 className={`text-4xl md:text-[56px] md:leading-[1.1] font-bold mb-6 tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>
@@ -200,25 +169,7 @@ export default function LandingPage() {
               builds a knowledge base, and embeds anywhere in seconds.
             </p>
 
-            {/* URL Input */}
-            <div className={`border p-2 rounded-xl flex flex-col md:flex-row gap-2 max-w-2xl mx-auto shadow-sm ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-              <div className={`flex-grow flex items-center px-4 rounded-lg border border-transparent focus-within:border-blue-500 transition ${dark ? 'bg-gray-700' : 'bg-gray-50'}`}>
-                <LinkIcon />
-                <input
-                  className={`w-full py-3 bg-transparent border-none focus:outline-none focus:ring-0 text-sm placeholder-gray-400 ml-2 ${dark ? 'text-white' : 'text-gray-800'}`}
-                  placeholder="https://your-website.com"
-                  type="text"
-                  readOnly
-                  onClick={() => window.location.href = '/login'}
-                />
-              </div>
-              <Link to="/login"
-                className="bg-blue-600 text-white px-10 py-3 rounded-lg text-xs font-bold hover:bg-blue-700 transition active:scale-95 whitespace-nowrap uppercase tracking-wide">
-                Generate Bot
-              </Link>
-            </div>
-
-            {/* Trust */}
+            {/* Trust badges */}
             <div className="mt-6 flex justify-center items-center gap-10 flex-wrap">
               <div className="flex items-center gap-2">
                 <ShieldIcon />
@@ -359,9 +310,9 @@ export default function LandingPage() {
             <div className="text-center mb-12">
               <span className="text-blue-600 text-xs font-bold tracking-widest uppercase">Pricing</span>
               <h2 className={`text-3xl font-bold mt-2 tracking-tight ${dark ? 'text-white' : 'text-gray-900'}`}>Simple, Transparent Pricing</h2>
-              <p className={`text-sm mt-2 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Start free, scale when you need to</p>
+              <p className={`text-sm mt-2 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>Choose a plan that fits your scale</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {plans.map(({ plan, price, convos, websites, popular }) => (
                 <div key={plan}
                   className={`relative rounded-xl p-7 border transition-all hover:-translate-y-1 duration-200 ${
@@ -400,7 +351,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── CTA ── */}
+        {/* ── CTA ("Get Started Free" button hata diya) ── */}
         <section className={`py-16 px-8 ${dark ? 'bg-gray-900' : 'bg-[#f8f9ff]'}`}>
           <div className="max-w-4xl mx-auto bg-gray-900 text-white p-16 rounded-[2rem] text-center relative overflow-hidden">
             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_top_right,_#0266ff_0%,_transparent_60%)]"/>
@@ -409,9 +360,6 @@ export default function LandingPage() {
               Join 1,200+ companies using BotForge to bridge the gap between static websites and AI-powered support.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-              <Link to="/register" className="bg-blue-600 text-white px-10 py-4 rounded-lg text-xs font-bold hover:bg-blue-700 transition active:scale-95 uppercase tracking-wide">
-                Get Started Free
-              </Link>
               <Link to="/login" className="bg-transparent border border-gray-600 text-white px-10 py-4 rounded-lg text-xs font-bold hover:bg-gray-800 transition uppercase tracking-wide">
                 Login
               </Link>

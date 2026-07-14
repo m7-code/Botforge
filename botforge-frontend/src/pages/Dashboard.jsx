@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getWebsites, addWebsite, deleteWebsite, recrawlWebsite, getMe } from '../services/api';
+import API from '../services/api';   // default import for usage call
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -112,6 +113,12 @@ const ChevronIcon = ({ open }) => (
   </svg>
 );
 
+const ChatIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // ─── Status Config ─────────────────────────────────────────────────────────────
 
 const STATUS = {
@@ -134,22 +141,30 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [websites, setWebsites] = useState([]);
   const [user, setUser]         = useState(null);
+  const [usage, setUsage]       = useState(null);
   const [loading, setLoading]   = useState(true);
   const [showAdd, setShowAdd]   = useState(false);
   const [newUrl, setNewUrl]     = useState('');
   const [adding, setAdding]     = useState(false);
   const [error, setError]       = useState('');
-  const [dark, setDark]         = useState(true); // theme state
+  const [dark, setDark]         = useState(true);
   const [sitesOpen, setSitesOpen] = useState(true);
 
   useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
-      const [webRes, userRes] = await Promise.all([getWebsites(), getMe()]);
+      const [webRes, userRes, usageRes] = await Promise.all([
+        getWebsites(),
+        getMe(),
+        API.get('/usage').catch(() => null)   // graceful fail if no usage endpoint
+      ]);
       setWebsites(webRes.data.data.websites);
       setUser(userRes.data.data.user);
       localStorage.setItem('user', JSON.stringify(userRes.data.data.user));
+      if (usageRes) {
+        setUsage(usageRes.data.data);
+      }
     } catch {
       navigate('/login');
     } finally {
@@ -345,13 +360,23 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          {/* Stats Cards (4 columns) */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
               { label: 'Total Websites', value: websites.length,  Icon: GlobeIcon, darkColor: 'text-blue-400',    darkBg: 'bg-blue-400/10',    color: 'text-blue-600',    bg: 'bg-blue-50'   },
               { label: 'Active Bots',    value: activeBots,        Icon: ChipIcon,  darkColor: 'text-emerald-400', darkBg: 'bg-emerald-400/10', color: 'text-emerald-600', bg: 'bg-emerald-50'},
               { label: 'Pages Crawled',  value: totalPages,        Icon: DocIcon,   darkColor: 'text-violet-400',  darkBg: 'bg-violet-400/10',  color: 'text-violet-600',  bg: 'bg-violet-50' },
-            ].map(({ label, value, Icon, color, bg, darkColor, darkBg }) => (
+              { 
+                label: 'Conversations', 
+                value: usage ? `${usage.used} / ${usage.limit}` : '...',
+                Icon: ChatIcon,
+                darkColor: 'text-amber-400',
+                darkBg: 'bg-amber-400/10',
+                color: 'text-amber-600',
+                bg: 'bg-amber-50',
+                sub: usage ? `Remaining: ${usage.remaining}` : ''
+              },
+            ].map(({ label, value, Icon, color, bg, darkColor, darkBg, sub }) => (
               <div key={label} className={`rounded-xl p-5 flex items-center gap-4 border ${d.card}`}>
                 <div className={`w-11 h-11 rounded-lg flex items-center justify-center ${dark ? darkBg + ' ' + darkColor : bg + ' ' + color}`}>
                   <Icon />
@@ -359,6 +384,7 @@ export default function Dashboard() {
                 <div>
                   <div className={`text-2xl font-bold ${d.text}`}>{value}</div>
                   <div className={`text-sm ${d.subtext}`}>{label}</div>
+                  {sub && <div className={`text-xs ${d.subtext}`}>{sub}</div>}
                 </div>
               </div>
             ))}
